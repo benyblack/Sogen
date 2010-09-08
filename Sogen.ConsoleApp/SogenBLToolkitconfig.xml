@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sogenBLToolkitGeneratorConfiguration>
+  <rootNamespace>Sogen.DB</rootNamespace>
+  <dataModelName>DataModel</dataModelName>
+  <dataModelAccessModifier>internal</dataModelAccessModifier>
+  <exportPath>d:\temp\generate</exportPath>
+  <generateEmptyPartialClass>true</generateEmptyPartialClass>
+  <generateInsertUpdateDeleteMethods>true</generateInsertUpdateDeleteMethods>
+  <generateGetMethods>true</generateGetMethods>
+  <generateGetByForeignKeys>true</generateGetByForeignKeys>
+  <generateBreadcrumbs>true</generateBreadcrumbs>
+  <customUsings>
+    <using>System.Globalization</using>
+  </customUsings>
+  <provider>MSSqlServer</provider>
+  <provider>CSharp</provider>
+  <MSSqlConfig>
+    <server>.\sql2k8</server>
+    <database>Avval</database>
+    <username>user</username>
+    <password>pass</password>
+    <useWindowsAuthentication>true</useWindowsAuthentication>
+    <schemas>
+      <schema>Avval</schema>
+      <schema>Wiki</schema>
+	  <schema>dbo</schema>
+    </schemas>
+    <generateObjectForViews>true</generateObjectForViews>
+  </MSSqlConfig>
+</sogenBLToolkitGeneratorConfiguration>
