@@ -76,14 +76,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SogenBLToolkitconfig.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SogenBLToolkitconfig2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Sogen\Sogen.csproj">
       <Project>{A5DEF5D1-C582-47FD-82EF-EA8515C6BD07}</Project>
       <Name>Sogen</Name>

@@ -107,8 +107,10 @@ namespace Sogen.Data.DataProvider {
 			result.Description = GetDescription(result.ClassName, result.Properties);
 			result.IsView = true;
 			result.Columns = GetColumns(result, v.Columns);
-
+			
 			return result;
+
+			
 		}
 
 		private MetaData.Table GetTable(MetaData.Schema schema, Smo.Table t) {
@@ -446,14 +448,14 @@ namespace Sogen.Data.DataProvider {
 			return result;
 		}
 
-		internal static Smo.Column SMOGetIdentity(Smo.Table table) {
+		public static Smo.Column SMOGetIdentity(Smo.Table table) {
 			for (int i = 0; i < table.Columns.Count; i++)
 				if (table.Columns[i].Identity)
 					return table.Columns[i];
 			return null;
 		}
 
-		internal static List<Smo.Column> SMOGetUniqueIdentifierColumns(Smo.Table table) {
+		public static List<Smo.Column> SMOGetUniqueIdentifierColumns(Smo.Table table) {
 			var result = new List<Smo.Column>();
 			for (int i = 0; i < table.Columns.Count; i++) {
 				if (table.Columns[i].DataType.SqlDataType == Smo.DataType.UniqueIdentifier.SqlDataType)
@@ -462,7 +464,7 @@ namespace Sogen.Data.DataProvider {
 			return result;
 		}
 
-		internal static string SMOGetDefaultValue(Smo.DefaultConstraint defaultConstraint, Smo.DataType dataType) {
+		public static string SMOGetDefaultValue(Smo.DefaultConstraint defaultConstraint, Smo.DataType dataType) {
 			if (defaultConstraint == null)
 				return string.Empty;
 			var result = defaultConstraint.Text;
@@ -490,6 +492,7 @@ namespace Sogen.Data.DataProvider {
 				case Smo.SqlDataType.NChar:
 				case Smo.SqlDataType.VarChar:
 				case Smo.SqlDataType.NVarChar:
+				case Smo.SqlDataType.NVarCharMax:
 				case Smo.SqlDataType.Text:
 				case Smo.SqlDataType.NText:
 				case Smo.SqlDataType.Xml:
@@ -502,7 +505,7 @@ namespace Sogen.Data.DataProvider {
 			return result;
 		}
 
-		internal static List<Smo.Index> SMOGetIndexs(Smo.Table table, Smo.IndexKeyType type) {
+		public static List<Smo.Index> SMOGetIndexs(Smo.Table table, Smo.IndexKeyType type) {
 			var result = new List<Smo.Index>();
 			for (int i = 0; i < table.Indexes.Count; i++)
 				if (table.Indexes[i].IndexKeyType == type) {
@@ -520,7 +523,7 @@ namespace Sogen.Data.DataProvider {
 			result.IsPrimaryKey = c.InPrimaryKey;
 			result.DefaultValue = SMOGetDefaultValue(c.DefaultConstraint, c.DataType);
 			result.Properties = SMOGetExtendedProperties(c);
-			result.Description = GetDescription(result.PropertyName, result.Properties);
+			result.Description = GetDescription((table.IsView)? result.PropertyName:string.Empty, result.Properties);
 			result.Type = SMOGetDataType(c.DataType);
 
 			return result;

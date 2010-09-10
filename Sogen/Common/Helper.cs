@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Sogen.Common {
 	public static class Helper {
-		public static string SogenVersion { get {return "1.1" ;}  }
+		public static string SogenVersion { get {return "1.2" ;}  }
 		public static string SogenTitle { get {return string.Format("Sogen - Code Generator for BLToolkit version {0}",SogenVersion) ;}  }
 
 

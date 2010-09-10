@@ -6,7 +6,7 @@ using Sogen.Common;
 
 namespace Sogen.Data.MetaData {
 
-	public class Column {
+	internal class Column :IValidatable {
 		public int ID { get; set; }
 		public string ColumnName { get; set; }
 		public string PropertyName {
@@ -36,6 +36,21 @@ namespace Sogen.Data.MetaData {
 		public Column(Table parent) {
 			this.Parent = parent;
 		}
+
+		#region IValidatable Members
+		public string SqlName {
+			get { return this.ColumnName; }
+		}
+
+		public string SqlFullName {
+			get { return string.Format("[{0}].[{1}].[{2}]", Parent.Parent.SqlName, Parent.SqlName, this.SqlName); }
+		}
+
+		MetaDataEnums.ValidationRules[] IValidatable.ValidationRoles {
+			get { return new MetaDataEnums.ValidationRules[] { MetaDataEnums.ValidationRules.HasDescription }; }
+		}
+
+		#endregion
 	}
 
 }

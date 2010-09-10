@@ -6,7 +6,7 @@ using Sogen.Common;
 
 namespace Sogen.Data.MetaData {
 
-	public class ForeignKey {
+	internal class ForeignKey:IValidatable {
 		public int ID { get; set; }
 		public string FkName { get; set; }
 		public string KeyName { get; set; }
@@ -63,6 +63,22 @@ namespace Sogen.Data.MetaData {
 		public ForeignKey(Table parent) {
 			this.Parent = parent;
 		}
+
+		#region IValidatable Members
+
+		public string SqlName {
+			get { return this.FkName; }
+		}
+
+		public string SqlFullName {
+			get { return string.Format("[{0}].[{1}].[{2}]", Parent.Parent.SqlName, Parent.SqlName, this.SqlName); }
+		}
+
+
+		MetaDataEnums.ValidationRules[] IValidatable.ValidationRoles {
+			get { return new MetaDataEnums.ValidationRules[] {}; }
+		}
+		#endregion
 	}
 
 }

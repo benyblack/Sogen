@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Sogen.ConsoleApp")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Sogen Generator")]
+[assembly: AssemblyDescription("Code Generator for BLToolkit")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Sogen.ConsoleApp")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Sogen Generator")]
+[assembly: AssemblyCopyright("© 2010 sogen.codeplex.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

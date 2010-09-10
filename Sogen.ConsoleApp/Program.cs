@@ -38,7 +38,7 @@ namespace Sogen.ConsoleApp {
 				Console.ReadKey();
 				return;
 			}
-
+			
 			generator.OnMessageAdd += new BLToolkitGenerator.OnMessageAddHandler(generator_OnMessageAdd);
 			Console.WriteLine("Connected to db Successfully");
 

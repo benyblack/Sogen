@@ -36,6 +36,8 @@ namespace Sogen.Generator.Configuration {
 		public bool GenerateGetByForeignKeys { get; set; }
 		[XmlElement("generateBreadcrumbs")]
 		public bool GenerateBreadcrumbs { get; set; }
+		[XmlElement("checkObjectsValidation")]
+		public bool CheckObjectsValidation { get; set; }
 		[XmlArray("customUsings"), XmlArrayItem("using")]
 		public string[] CustomUsings { get; set; }
 		[XmlElement("provider")]
@@ -57,12 +59,13 @@ namespace Sogen.Generator.Configuration {
 				this.GenerateInsertUpdateDelete =
 				this.GenerateGetMethods =
 				this.GenerateGetByForeignKeys =
-				this.GenerateBreadcrumbs = true;
+				this.GenerateBreadcrumbs =
+				this.CheckObjectsValidation = true;
 			this.Provider = DataProviderEnums.Providers.MSSqlServer;
 			this.Language = WriterEnums.Languages.CSharp;
 			this.MSSqlConfig = new MSSqlConfiguration();
 			this.CustomUsings = new string[] { "Library Name" };
-		
+
 		}
 		#endregion
 

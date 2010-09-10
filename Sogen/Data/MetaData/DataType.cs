@@ -8,7 +8,7 @@ using Sogen.Common;
 
 namespace Sogen.Data.MetaData {
 
-	public class DataType {
+	internal class DataType {
 		public string Type { get; set; }
 		public string CSharpType { get; set; }
 		public string CSharpNullableType { get; set; }

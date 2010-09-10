@@ -57,7 +57,7 @@ namespace Sogen.Writer {
 				this.Add(" :");
 				foreach (string item in baseClass) {
 					if (!string.IsNullOrEmpty(item))
-						this.AddFormat(" {0},",item);
+						this.AddFormat(" {0},", item);
 				}
 				this.Remove(1);
 			}
@@ -137,7 +137,7 @@ namespace Sogen.Writer {
 			this.Add("[");
 			foreach (string item in attributes) {
 				if (!string.IsNullOrEmpty(item))
-					this.AddFormat("{0}, ",item);
+					this.AddFormat("{0}, ", item);
 			}
 			this.Remove(2).AddLine("]");
 			return this;

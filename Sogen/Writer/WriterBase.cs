@@ -27,32 +27,34 @@ namespace Sogen.Writer {
 		#endregion
 
 		#region Private Methods
-		private StringBuilder _text = new StringBuilder();
-		private List<char> _indent = new List<char>();
+		public StringBuilder _text = new StringBuilder();
+		public List<char> _indent = new List<char>();
 		#endregion
 
 		#region Public Methods
-		public void pushIndent([Optional, DefaultParameterValue('\t')] char c) {
+		public WriterBase pushIndent([Optional, DefaultParameterValue('\t')] char c) {
 			if (this.Text.EndsWith(this.Indent))
 				this._text.Append(c);
 			_indent.Add(c);
 			if (this._text.Length == 0)
 				this._text.Append(this.Indent);
-
+			return this;
 		}
-		public void popIndent() {
+		public WriterBase popIndent() {
 			try {
 				if (this.Text.EndsWith(this.Indent))
 					this._text = this._text.Remove(this._text.Length - 1, 1);
 				_indent.RemoveAt(_indent.Count - 1);
 			} catch (Exception) { }
+			return this;
 		}
 		public override string ToString() {
 			return this.Text;
 		}
-		public void clear() {
+		public WriterBase clear() {
 			this._text.Clear();
 			this._indent = new List<char>();
+			return this;
 		}
 		public WriterBase AddIndent() {
 			this._text.Append(this.Indent);
@@ -85,7 +87,7 @@ namespace Sogen.Writer {
 		#endregion
 
 		#region Constructor
-		internal WriterBase(WriterEnums.Languages language) {
+		public WriterBase(WriterEnums.Languages language) {
 			this.Language = language;
 		}
 		#endregion
@@ -111,7 +113,7 @@ namespace Sogen.Writer {
 		#endregion
 
 		#region Static Methods
-		internal static WriterBase Create(WriterEnums.Languages language) {
+		public static WriterBase Create(WriterEnums.Languages language) {
 			switch (language) {
 				case WriterEnums.Languages.CSharp:
 					return new CSharpWriter();

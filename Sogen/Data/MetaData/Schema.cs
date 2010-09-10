@@ -5,7 +5,7 @@ using System.Text;
 using Sogen.Common;
 
 namespace Sogen.Data.MetaData {
-	public class Schema {
+	internal class Schema:IValidatable {
 		public string SchemaName { get; set; }
 		public string Namespace {
 			get { return Helper.GetName(Properties, this.SchemaName); }
@@ -27,5 +27,21 @@ namespace Sogen.Data.MetaData {
 			return this.Namespace;
 		}
 
+
+		#region IValidatable Members
+
+		public string SqlName {
+			get { return this.SchemaName; }
+		}
+
+		public string SqlFullName {
+			get { return string.Format("[{0}]", this.SqlName); }
+		}
+
+		MetaDataEnums.ValidationRules[] IValidatable.ValidationRoles {
+			get { return new MetaDataEnums.ValidationRules[] { MetaDataEnums.ValidationRules.PascalCase }; }
+		}
+
+		#endregion
 	}
 }

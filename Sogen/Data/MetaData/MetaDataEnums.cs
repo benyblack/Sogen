@@ -18,5 +18,12 @@ namespace Sogen.Data.MetaData {
 			UniqueIdentifier,
 			UniqueKey
 		}
+		public enum ValidationRules {
+			PascalCase,
+			CamelCase,
+			Singular,
+			Plural,
+			HasDescription
+		}
 	}
 }

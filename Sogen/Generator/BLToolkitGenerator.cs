@@ -16,8 +16,10 @@ namespace Sogen.Generator {
 
 		#region Properties & Fileds
 		public List<string> Messages { get; private set; }
+		public List<Validation> Warnings { get; private set; }
 		internal ProviderBase Provider { get; private set; }
 		internal Configuration.BLToolkitConfiguration Config { get { return this.Provider.Config; } }
+
 		#endregion
 
 		#region Events
@@ -29,6 +31,7 @@ namespace Sogen.Generator {
 		private BLToolkitGenerator(ProviderBase provider) {
 			this.Provider = provider;
 			this.Messages = new List<string>();
+			this.Warnings = new List<Validation>();
 			this.Provider.OnMessageAdd += new OnMessageAddHandler(Provider_OnMessageAdd);
 		}
 		#endregion
@@ -36,7 +39,7 @@ namespace Sogen.Generator {
 		#region Private Methods
 
 		private void Generate(Schema schema) {
-
+			Validate(schema);
 			this.AddMessage("* Schema {0}", schema.Namespace);
 			string rootNamespace = string.Format("{0}.{1}", Config.RootNamespace, schema.Namespace);
 			string dataMadoleName = Config.DataModelName;
@@ -97,6 +100,7 @@ namespace Sogen.Generator {
 		}
 
 		private void Generate(Table table, ref WriterBase writer) {
+			Validate(table);
 			this.AddMessage("* * * {0}", table.ClassName);
 			List<string> attributes = new List<string>();
 			attributes.Add(string.Format("TableName(Owner = \"{0}\", Name = \"{1}\")", table.Parent.SchemaName, table.TableName));
@@ -141,6 +145,7 @@ namespace Sogen.Generator {
 			var writer = WriterBase.Create(Config.Language);
 			// Get
 			foreach (UniqueKey uk in table.UniqueKeys.Values) {
+				Validate(uk);
 				writer.AddLine();
 				writer.AddXmlComment(string.Format("Get a {0} from db", table.ClassName));
 				writer.AddFormatLine("public static {0}.{1} Get{2} (", table.Parent.Namespace, table.ClassName,
@@ -150,14 +155,14 @@ namespace Sogen.Generator {
 				writer.AddFormatLine("var {0} = new {1}.{2}();", table.ClassName.ToCamel(), table.Parent.Namespace, table.ClassName);
 				writer.Add(Helper.GetColumnList(uk.Columns,
 					   string.Format("{0}.{{property}} = {{camelprop}};", table.ClassName.ToCamel()),
-					  ", \r\n", false, false));
+					  " \r\n", false, false));
 				writer.AddLine();
 				writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
 				writer.pushIndent();
 				writer.AddLine("return db.SetCommand(@\"").pushIndent();
 				writer.AddFormatLine("Select * From [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
 				writer.AddLine("Where (").pushIndent();
-				writer.Add(Helper.GetColumnList(uk.Columns, "{column} = @{column}", "AND \r\n", false, false)).Add(" );").popIndent();
+				writer.Add(Helper.GetColumnList(uk.Columns, "{column} = @{column}", " AND \r\n", false, false)).Add(" );").popIndent();
 				writer.AddFormatLine("\", db.CreateParameters({0}))", table.ClassName.ToCamel());
 				writer.AddFormatLine(".ExecuteObject<{0}.{1}>();", table.Parent.Namespace, table.ClassName);
 				writer.popIndent();
@@ -214,9 +219,9 @@ namespace Sogen.Generator {
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Update [{0}].[{1}]  set ", table.Parent.SchemaName, table.TableName).pushIndent();
-			writer.Add(Helper.GetColumnList(table.Columns, "{column} = @{column}", ",\r\n", true, false)).AddLine().popIndent();
+			writer.Add(Helper.GetColumnList(table.Columns, "{column} = @{column}", ", \r\n", true, false)).AddLine().popIndent();
 			writer.AddLine(" Where (").pushIndent();
-			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{column} = @{column}", "AND \r\n", false, false)).Add(" );").popIndent();
+			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{column} = @{column}", " AND \r\n", false, false)).Add(" );").popIndent();
 			writer.AddLine("\", db.CreateParameters(this))");
 			writer.popIndent();
 			writer.AddLine(".ExecuteNonQuery();");
@@ -235,7 +240,7 @@ namespace Sogen.Generator {
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
 			writer.AddLine(" Where (").pushIndent();
-			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{column} = @{column}", "AND \r\n", false, false)).Add(" );").popIndent();
+			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{column} = @{column}", " AND \r\n", false, false)).Add(" );").popIndent();
 			writer.AddLine("\", db.CreateParameters(this))");
 			writer.popIndent();
 			writer.AddLine(".ExecuteNonQuery();");
@@ -252,14 +257,14 @@ namespace Sogen.Generator {
 			writer.AddFormatLine("var {0} = new {1}.{2}();", table.ClassName.ToCamel(), table.Parent.Namespace, table.ClassName);
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns,
 				   string.Format("{0}.{{property}} = {{camelprop}};", table.ClassName.ToCamel()),
-				  ", \r\n", false, false));
+				  " \r\n", false, false));
 			writer.AddLine();
 			writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
 			writer.AddLine("Where (").pushIndent();
-			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{column} = @{column}", "AND \r\n", false, false)).Add(" );").popIndent();
+			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{column} = @{column}", " AND \r\n", false, false)).Add(" );").popIndent();
 			writer.AddFormatLine("\", db.CreateParameters({0}))", table.ClassName.ToCamel());
 			writer.AddLine(".ExecuteNonQuery();");
 			writer.popIndent();
@@ -273,6 +278,7 @@ namespace Sogen.Generator {
 		}
 
 		private void Generate(Column column, Dictionary<string, Column> primary, ref WriterBase writer) {
+			Validate(column);
 			// Make Attributes
 			List<string> attributes = new List<string>();
 
@@ -303,6 +309,8 @@ namespace Sogen.Generator {
 		}
 
 		private void Generate(ForeignKey fk, ref WriterBase writer) {
+			if (!fk.IsBackReference)
+				Validate(fk);
 			List<string> attributes = new List<string>();
 
 			string thisKey = string.Empty;
@@ -386,6 +394,28 @@ namespace Sogen.Generator {
 			this.AddMessage("* * Create File {0}", filename);
 		}
 
+		private void CreateWarnningFile() {
+			if (!Config.CheckObjectsValidation)
+				return;
+			StringBuilder sb = new StringBuilder();
+			string filename = string.Format(string.Format("{0}Warnning.txt", GetExportFolder()));
+			if (File.Exists(filename))
+				File.Delete(filename);
+			for (int i = 0; i < this.Warnings.Count; i++) {
+				string rules = string.Empty;
+				foreach (MetaDataEnums.ValidationRules rule in this.Warnings[i].Rules) {
+					rules += string.Format("{0}, ", rule.ToString());
+				}
+				if (rules.Length > 0)
+					rules = rules.Remove(rules.Length - 2);
+				sb.AppendLine(string.Format("{0}  * Must be {1} ", this.Warnings[i].Objectname, rules));
+			}
+			if (sb.Length > 0) {
+				File.WriteAllText(filename, sb.ToString());
+				this.AddMessage("* * Create File {0}", filename);
+			}
+		}
+
 		private DB NormalizeForeignKeys(DB db) {
 
 			List<ForeignKey> backReferenceKeys = new List<ForeignKey>();
@@ -394,7 +424,7 @@ namespace Sogen.Generator {
 					foreach (ForeignKey fk in table.ForeignKeys.Values) {
 
 						// Normalize Name
-						string newName = fk.OtherTable.ClassName;
+						string newName = (fk.OtherTable.Parent.SchemaName == fk.Parent.Parent.SchemaName) ? fk.OtherTable.ClassName : fk.OtherTable.Parent.Namespace + fk.OtherTable.ClassName;
 						if (fk.Parent.TableName == fk.OtherTable.TableName && fk.Parent.Parent.SchemaName == fk.OtherTable.Parent.SchemaName)
 							newName = Helper.GetColumnListName(fk.ThisColumns) + fk.OtherTable.ClassName;
 						switch (fk.AssociationType) {
@@ -452,7 +482,7 @@ namespace Sogen.Generator {
 						newFk.FkName = string.Format("{0}_BackReference", fk.FkName);
 						newFk.Description = fk.Description;
 						newFk.ID = fk.OtherTable.ForeignKeys.Count + 1;
-						newFk.KeyName = table.ClassName;
+						newFk.KeyName = (fk.OtherTable.Parent.SchemaName == fk.Parent.Parent.SchemaName) ? table.ClassName : table.Parent.Namespace + table.ClassName;
 						newFk.OtherColumns = fk.ThisColumns;
 						newFk.OtherTable = table;
 						newFk.Properties = fk.Properties;
@@ -470,14 +500,16 @@ namespace Sogen.Generator {
 
 
 						foreach (Column col in newFk.Parent.Columns.Values)
-							if (col.PropertyName == newName) {
+							if (col.PropertyName == newFk.KeyName) {
 								newFkIsValid = false;
 								break;
 							}
 						if (newFkIsValid)
 							foreach (ForeignKey otherFk in newFk.Parent.ForeignKeys.Values)
 								if (otherFk.OtherTable.TableName == newFk.OtherTable.TableName && otherFk.OtherTable.Parent.SchemaName == newFk.OtherTable.Parent.SchemaName)
-									newFkIsValid = false;
+									if (otherFk.ID != fk.ID) {
+										newFkIsValid = false;
+									}
 						if (!newFkIsValid)
 							newFk.KeyName = string.Format("{0}By{1}", newFk.MemberName, Helper.GetColumnListName(newFk.OtherColumns));
 						newFk.IsBackReference = true;
@@ -492,6 +524,37 @@ namespace Sogen.Generator {
 				fk.Parent.ForeignKeys.Add(fk.FkName, fk);
 			}
 			return db;
+		}
+
+		private void Validate(IValidatable obj) {
+			Validation validation = new Validation();
+			validation.Objectname = obj.SqlFullName;
+			foreach (MetaDataEnums.ValidationRules rule in obj.ValidationRoles) {
+				switch (rule) {
+					case MetaDataEnums.ValidationRules.PascalCase:
+						if (obj.SqlName != obj.SqlName.ToPascal())
+							validation.Rules.Add(MetaDataEnums.ValidationRules.PascalCase);
+						break;
+					case MetaDataEnums.ValidationRules.CamelCase:
+						if (obj.SqlName != obj.SqlName.ToCamel())
+							validation.Rules.Add(MetaDataEnums.ValidationRules.CamelCase);
+						break;
+					case MetaDataEnums.ValidationRules.Singular:
+						if (obj.SqlName != Plurals.ToSingular(obj.SqlName))
+							validation.Rules.Add(MetaDataEnums.ValidationRules.Singular);
+						break;
+					case MetaDataEnums.ValidationRules.Plural:
+						if (obj.SqlName != Plurals.ToPlural(obj.SqlName))
+							validation.Rules.Add(MetaDataEnums.ValidationRules.Plural);
+						break;
+					case MetaDataEnums.ValidationRules.HasDescription:
+						if (string.IsNullOrWhiteSpace(obj.Description))
+							validation.Rules.Add(MetaDataEnums.ValidationRules.HasDescription);
+						break;
+				}
+			}
+			if (validation.Rules.Count > 0)
+				this.Warnings.Add(validation);
 		}
 
 		private string GetHeader() {
@@ -548,14 +611,19 @@ namespace Sogen.Generator {
 				Generate(schema);
 
 			CreateConfigFile(db);
+			CreateWarnningFile();
+
 			this.AddMessage("- Generate Code : done:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 
 			StringBuilder sb = new StringBuilder();
+			sb = new StringBuilder();
 			for (int i = 0; i < this.Messages.Count; i++) {
 				sb.AppendLine(this.Messages[i]);
 			}
-			File.WriteAllText(string.Format("{0}{1}.log", GetExportFolder(), Config.RootNamespace), sb.ToString());
+			File.WriteAllText(string.Format("{0}Sogen.log", GetExportFolder()), sb.ToString());
 		}
+
+
 
 		#region Static Methods
 

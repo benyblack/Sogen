@@ -50,6 +50,7 @@
     <Compile Include="Data\DataProvider\ProviderBase.cs" />
     <Compile Include="Data\MetaData\Column.cs" />
     <Compile Include="Data\MetaData\DataType.cs" />
+    <Compile Include="Data\MetaData\IValidatable.cs" />
     <Compile Include="Data\MetaData\MetaDataEnums.cs" />
     <Compile Include="Data\MetaData\ForeignKey.cs" />
     <Compile Include="Data\MetaData\Schema.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Data\MetaData\DB.cs" />
     <Compile Include="Generator\BLToolkitGenerator.cs" />
     <Compile Include="Generator\Configuration\MSSqlConfiguration.cs" />
+    <Compile Include="Generator\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Writer\CSharpWriter.cs" />
     <Compile Include="Writer\WriterEnums.cs" />

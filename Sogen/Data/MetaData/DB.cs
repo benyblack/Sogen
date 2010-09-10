@@ -7,7 +7,7 @@ using Sogen.Common;
 
 namespace Sogen.Data.MetaData {
 
-	public class DB {
+	internal class DB {
 
 		public string DBName { get; set; }
 
