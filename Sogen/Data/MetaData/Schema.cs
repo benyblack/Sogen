@@ -23,6 +23,13 @@ namespace Sogen.Data.MetaData {
 			get { return this._tables; }
 			set { this._tables = value; }
 		}
+
+		private Dictionary<string, Enum> _enums = new Dictionary<string, Enum>();
+		public Dictionary<string, Enum> Enums {
+			get { return this._enums; }
+			set { this._enums = value; }
+		}
+
 		public override string ToString() {
 			return this.Namespace;
 		}

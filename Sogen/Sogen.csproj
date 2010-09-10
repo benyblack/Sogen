@@ -50,6 +50,7 @@
     <Compile Include="Data\DataProvider\ProviderBase.cs" />
     <Compile Include="Data\MetaData\Column.cs" />
     <Compile Include="Data\MetaData\DataType.cs" />
+    <Compile Include="Data\MetaData\Enum.cs" />
     <Compile Include="Data\MetaData\IValidatable.cs" />
     <Compile Include="Data\MetaData\MetaDataEnums.cs" />
     <Compile Include="Data\MetaData\ForeignKey.cs" />

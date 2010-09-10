@@ -3,18 +3,32 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 
 namespace Sogen.Common {
 	public static class Helper {
-		public static string SogenVersion { get {return "1.2" ;}  }
-		public static string SogenTitle { get {return string.Format("Sogen - Code Generator for BLToolkit version {0}",SogenVersion) ;}  }
+		public static string SogenVersion {
+			get {
+				return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			}
+		}
+		public static string SogenTitle {
+			get {
+
+				var description = ((AssemblyDescriptionAttribute)AssemblyDescriptionAttribute.GetCustomAttribute(
+						Assembly.GetExecutingAssembly(), typeof(AssemblyDescriptionAttribute))).Description;
+				var name = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+				return string.Format("{0} - {1} version {2}", name, description, SogenVersion);
+			}
+		}
 
 
 		#region Constant
 		public const string NameKey = "Sogen_Name";
 		public const string BackReferenceNameKey = "Sogen_BackReferenceName";
 		public const string AttributeKey = "Sogen_Attribute";
+		public const string MapValueKey = "Sogen_MapValue";
 		#endregion
 
 		#region  Extended Methods
@@ -125,6 +139,27 @@ namespace Sogen.Common {
 				return properties[NameKey];
 			return def.ToNormalPascal();
 		}
+
+		internal static Data.MetaData.Enum GetMapValue(Data.MetaData.Column col) {
+			if (!col.Properties.ContainsKey(MapValueKey))
+				return null;
+
+			try {
+				Data.MetaData.Enum e = new Data.MetaData.Enum();
+				string propValue = col.Properties[MapValueKey].ToString();
+				propValue.Replace("\r", "");
+				var lines = propValue.Split('\n');
+				e.Name = lines[0].Replace("\r", "").Replace("\n", "").ToNormalPascal();
+				for (int i = 1; i < lines.Length; i++) {
+					var value = lines[i].Replace("\r", "").Replace("\n", "").Split(':');
+					e.Values.Add(value[0], new KeyValuePair<string, string>(value[0], value[1].ToNormalPascal()));
+				}
+				return e;
+			} catch (Exception) {
+				return null;
+			}
+		}
+
 
 		internal static string GetBackReferenceName(Dictionary<string, string> properties, string def) {
 			if (properties.ContainsKey(BackReferenceNameKey))

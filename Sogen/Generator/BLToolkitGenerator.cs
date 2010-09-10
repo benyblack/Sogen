@@ -64,8 +64,11 @@ namespace Sogen.Generator {
 							Config.RootNamespace,
 							schema.Namespace);
 			writer.AddEndClass(dataMadoleName);
+
 			foreach (Table table in schema.Tables.Values)
 				Generate(table, ref writer);
+			if (schema.Enums.Count > 0)
+				Generate(schema.Enums,schema.Namespace, ref writer);
 			writer.AddEndNamespace(rootNamespace);
 
 			string filename = string.Format("{0}{1}.generated.cs", GetExportFolder(), schema.Namespace);
@@ -98,6 +101,7 @@ namespace Sogen.Generator {
 			}
 
 		}
+
 
 		private void Generate(Table table, ref WriterBase writer) {
 			Validate(table);
@@ -296,13 +300,13 @@ namespace Sogen.Generator {
 									.Replace("{table}", column.Parent.ClassName)
 									.Replace("{name}", column.PropertyName)
 									.Replace("{type}", column.Type.CSharpType)
-									.Replace("{type?}", column.IsNullable ? column.Type.CSharpNullableType : column.Type.CSharpType));
+									.Replace("{type?}", column.GetType));
 			}
 
 			//
 			writer.AddLine();
 			writer.AddPropertyWithFiled(column.PropertyName,
-										column.IsNullable ? column.Type.CSharpNullableType : column.Type.CSharpType,
+										column.GetType,
 										column.Description,
 										column.DefaultValue,
 										attributes.ToArray());
@@ -345,6 +349,22 @@ namespace Sogen.Generator {
 
 
 			writer.AddProperty(fk.MemberName, type);
+		}
+
+		private void Generate(Dictionary<string, Data.MetaData.Enum> enums, string schemaName, ref WriterBase writer) {
+			writer.AddLine();
+			writer.AddBeginRegion(string.Format("{0}Enums",schemaName));
+			writer.AddBeginClass(string.Format("{0}Enums", schemaName), "public", false, true);
+			
+			foreach (Data.MetaData.Enum e in enums.Values) {
+				writer.AddFormatLine("public enum {0} {{", e.Name).pushIndent();
+				foreach (KeyValuePair<string, string> item in e.Values.Values) {
+					writer.AddFormatLine("[MapValue({0})] {1},", item.Key, item.Value);
+				}
+				writer.popIndent().AddLine("}");
+			}
+			writer.AddEndClass(string.Format("{0}Enums", schemaName));
+			writer.AddEndRegion(string.Format("{0}Enums", schemaName));
 		}
 
 		private void CreateConfigFile(DB db) {
@@ -394,11 +414,11 @@ namespace Sogen.Generator {
 			this.AddMessage("* * Create File {0}", filename);
 		}
 
-		private void CreateWarnningFile() {
+		private void CreateWarningFile() {
 			if (!Config.CheckObjectsValidation)
 				return;
 			StringBuilder sb = new StringBuilder();
-			string filename = string.Format(string.Format("{0}Warnning.txt", GetExportFolder()));
+			string filename = string.Format(string.Format("{0}Warning.txt", GetExportFolder()));
 			if (File.Exists(filename))
 				File.Delete(filename);
 			for (int i = 0; i < this.Warnings.Count; i++) {
@@ -526,6 +546,23 @@ namespace Sogen.Generator {
 			return db;
 		}
 
+		private DB MakeEnums(DB db) {
+			foreach (Schema schema in db.Schemas.Values) {
+				foreach (Table table in schema.Tables.Values) {
+					foreach (Column col in table.Columns.Values) {
+						Data.MetaData.Enum e = Helper.GetMapValue(col);
+						if (e == null)
+							continue;
+						col.IsEnum = true;
+						col.EnumType = string.Format("{0}Enums.{1}",schema.Namespace, e.Name.ToNormalPascal());
+						if (!schema.Enums.ContainsKey(e.Name))
+							schema.Enums.Add(e.Name,e);
+					}
+				}
+			}
+			return db;
+		}
+
 		private void Validate(IValidatable obj) {
 			Validation validation = new Validation();
 			validation.Objectname = obj.SqlFullName;
@@ -605,13 +642,15 @@ namespace Sogen.Generator {
 			this.AddMessage("- Fetch Data : done:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 			this.AddMessage("- Normalize ForegnKeys:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 			db = NormalizeForeignKeys(db);
+			this.AddMessage("- Generate Enums:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
+			db = MakeEnums(db);
 			this.AddMessage("- Normalize ForegnKeys : done:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 			this.AddMessage("- Generate Code:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 			foreach (Schema schema in db.Schemas.Values)
 				Generate(schema);
 
 			CreateConfigFile(db);
-			CreateWarnningFile();
+			CreateWarningFile();
 
 			this.AddMessage("- Generate Code : done:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 
@@ -622,6 +661,8 @@ namespace Sogen.Generator {
 			}
 			File.WriteAllText(string.Format("{0}Sogen.log", GetExportFolder()), sb.ToString());
 		}
+
+
 
 
 

@@ -6,7 +6,7 @@ using Sogen.Common;
 
 namespace Sogen.Data.MetaData {
 
-	internal class Column :IValidatable {
+	internal class Column : IValidatable {
 		public int ID { get; set; }
 		public string ColumnName { get; set; }
 		public string PropertyName {
@@ -14,6 +14,8 @@ namespace Sogen.Data.MetaData {
 		}
 		public string FiledName { get { return this.ColumnName.ToNormalCamelWithUnderscore(); } }
 		public bool IsNullable { get; set; }
+		public bool IsEnum { get; set; }
+		public string EnumType { get; set; }
 		public bool IsIdentity { get; set; }
 		public bool IsPrimaryKey { get; set; }
 		public string DefaultValue { get; set; }
@@ -35,6 +37,16 @@ namespace Sogen.Data.MetaData {
 
 		public Column(Table parent) {
 			this.Parent = parent;
+		}
+
+		public string GetType {
+			get {
+				if (this.IsEnum)
+					return this.EnumType;
+				if (IsNullable)
+					return this.Type.CSharpNullableType;
+				return this.Type.CSharpType;
+			}
 		}
 
 		#region IValidatable Members
