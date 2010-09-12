@@ -57,12 +57,10 @@ namespace Sogen.Writer {
 			return this;
 		}
 		public WriterBase AddIndent() {
-			this._text.Append(this.Indent);
-			return this;
+            return this.Add(this.Indent);
 		}
 		public WriterBase AddLine() {
-			this._text = this._text.AppendLine();
-			return this.AddIndent();
+            return this.Add("\r\n");
 		}
 		public WriterBase Add(string s) {
 			this._text.Append(s.Replace("\n", "\n" + this.Indent));
@@ -72,8 +70,9 @@ namespace Sogen.Writer {
 			return this.Add(s).AddLine();
 		}
 		public WriterBase AddFormat(string format, params string[] s) {
-			this._text = this._text.AppendFormat(format, s);
-			return this;
+            StringBuilder tmp = new StringBuilder();
+            tmp.AppendFormat(format, s);
+            return this.Add(tmp.ToString());
 		}
 		public WriterBase AddFormatLine(string format, params string[] s) {
 			return this.AddFormat(format, s).AddLine();
