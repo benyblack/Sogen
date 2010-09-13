@@ -10,6 +10,7 @@ using System.IO;
 namespace Sogen.ConsoleApp {
 	class Program {
 		static void Main(string[] args) {
+			Console.WriteLine(Sogen.Common.Helper.SogenTitle);
 
 			string filename = (args.Length > 0) ? args[0] : "SogenBLToolkitconfig.xml";
 
@@ -62,7 +63,6 @@ namespace Sogen.ConsoleApp {
 		}
 
 		private static void ShowHelp() {
-			Console.WriteLine(Sogen.Common.Helper.SogenTitle);
 			Console.WriteLine(" * * * Help * * *");
 			Console.WriteLine(" Under Construction ");
 			Console.ReadKey();

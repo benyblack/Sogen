@@ -23,6 +23,20 @@ namespace Sogen.Common {
 			}
 		}
 
+		private static List<string> ReserverdWords {
+			get { return new List<string>() { "abstract", "as", "base", "bool", "break", "by", "byte", "case",
+				"catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do",
+				"double", "descending", "explicit", "event", "extern", "else", "enum", "false", "finally", "fixed",
+				"float", "for", "foreach", "from", "goto", "group", "if", "implicit", "in", "int", "interface", 
+				"internal", "into", "is", "lock", "long", "new", "null", "namespace", "object", "operator", "out", 
+				"override", "orderby", "params","private", "protected", "public", "readonly", "ref", "return", 
+				"switch", "struct", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "select", 
+				"this", "throw", "true", "try", "typeof","uint", "ulong", "unchecked", "unsafe", "ushort", "using", 
+				"var", "virtual", "volatile", "void", "while", "where", "yield" }; }
+		}
+
+
+
 
 		#region Constant
 		public const string NameKey = "Sogen_Name";
@@ -47,8 +61,8 @@ namespace Sogen.Common {
 			if (string.IsNullOrEmpty(s))
 				return string.Empty;
 
-			if (s.ToUpper() == "ID")
-				return "ID";
+			//if (s.ToUpper() == "ID")
+			//return "ID";
 
 
 			return s[0].ToString().ToUpper() + s.Remove(0, 1);
@@ -106,11 +120,18 @@ namespace Sogen.Common {
 		}
 
 		internal static string ToNormal(this string s) {
-			return s.Replace("_", "").Replace(" ", "");
+			//if (s.ToUpper() == "ID")
+				//return "ID";
+			s = s.Replace("_", "").Replace(" ", "");
+			if (ReserverdWords.Contains(s.ToLower()))
+				s = s + "1";
+			return s;
 		}
 		#endregion
 
 		#region Methods
+
+
 		internal static string GetColumnListName(Dictionary<string, Data.MetaData.Column> cols) {
 			var result = string.Empty;
 			foreach (Data.MetaData.Column col in cols.Values)
@@ -178,7 +199,9 @@ namespace Sogen.Common {
 											.Replace("{property}", col.PropertyName)
 											.Replace("{filed}", col.FiledName)
 											.Replace("{type}", (col.IsNullable) ? col.Type.CSharpNullableType : col.Type.CSharpType)
+											.Replace("{value}", (col.IsNullable)? (col.Type.CSharpNullableType == col.Type.CSharpType ? "":".Value"):"")
 											.Replace("{camelprop}", col.PropertyName.ToNormalCamel());
+
 				result += tmp + delimiter;
 			}
 

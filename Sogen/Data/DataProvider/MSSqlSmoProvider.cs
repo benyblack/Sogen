@@ -176,6 +176,14 @@ namespace Sogen.Data.DataProvider {
 				col.ID = 1;
 				uk.Columns.Add(col.ColumnName, col);
 				uk.KeyName = Helper.GetColumnListName(uk.Columns);
+				bool addedPast = false;
+				foreach (MetaData.UniqueKey item in result.Values) 
+					if (uk.KeyName == item.KeyName) {
+						addedPast = true;
+						break;
+					}
+				if (addedPast)
+					continue;
 				uk.UKName = string.Format("UK_{0}", col.ColumnName);
 				uk.Properties = SMOGetExtendedProperties(uiCols[i]);
 				uk.Description = GetDescription(uk.KeyName, uk.Properties);
@@ -416,14 +424,14 @@ namespace Sogen.Data.DataProvider {
 					break;
 				case Microsoft.SqlServer.Management.Smo.SqlDataType.Char:
 					result.CSharpType = smoDataType.MaximumLength == 1 ? "char" : "string";
-					result.CSharpNullableType = result.CSharpType;
+					result.CSharpNullableType = smoDataType.MaximumLength == 1 ? "char?" : result.CSharpType;
 					result.DbType = DbType.AnsiStringFixedLength;
 					result.SqlDbType = SqlDbType.Char;
 					break;
 
 				case Microsoft.SqlServer.Management.Smo.SqlDataType.NChar:
 					result.CSharpType = smoDataType.MaximumLength == 1 ? "char" : "string";
-					result.CSharpNullableType = result.CSharpType;
+					result.CSharpNullableType = smoDataType.MaximumLength == 1 ? "char?" : result.CSharpType;
 					result.DbType = DbType.StringFixedLength;
 					result.SqlDbType = SqlDbType.NChar;
 					break;
@@ -468,7 +476,7 @@ namespace Sogen.Data.DataProvider {
 			if (defaultConstraint == null)
 				return string.Empty;
 			var result = defaultConstraint.Text;
-			result = result.Replace("(N", "(").Replace("'", "\"").Replace("(", "").Replace(")", "").ToLower();
+			result = result.Replace("(N", "").Replace("N'", "\"").Replace("'", "\"").Replace("(", "").Replace(")", "").ToLower();
 			if (String.IsNullOrEmpty(result))
 				return string.Empty;
 
@@ -481,9 +489,10 @@ namespace Sogen.Data.DataProvider {
 				case Smo.SqlDataType.DateTime:
 				case Smo.SqlDataType.DateTime2:
 				case Smo.SqlDataType.Date:
+					result = result.Replace("\"", "");
 					result = (result == "getdate")
 								? "DateTime.Now"
-								: (result == "getutcdate") ? "DateTime.UtcNow" : string.Format("DateTime.Parse({0})", result);
+								: (result == "getutcdate") ? "DateTime.UtcNow" : string.Format("DateTime.Parse(\"{0}\")", result);
 					break;
 				case Smo.SqlDataType.UniqueIdentifier:
 					result = (result == "newid") ? "Guid.NewGuid()" : string.Format("Guid.Parse({0})", result);
