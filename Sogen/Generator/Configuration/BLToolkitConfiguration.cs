@@ -20,22 +20,14 @@ namespace Sogen.Generator.Configuration {
 
 		[XmlElement("rootNamespace")]
 		public string RootNamespace { get; set; }
-		[XmlElement("dataModelName")]
-		public string DataModelName { get; set; }
+        [XmlElement("dataModelNamePostfix")]
+		public string DataModelNamePostfix { get; set; }
 		[XmlElement("dataModelAccessModifier")]
 		public string DataModelAccessModifier { get; set; }
 		[XmlElement("exportPath")]
 		public string ExportPath { get; set; }
 		[XmlElement("generateEmptyPartialClass")]
 		public bool GenerateEmptyPartialClass { get; set; }
-		[XmlElement("generateInsertUpdateDeleteMethods")]
-		public bool GenerateInsertUpdateDelete { get; set; }
-		[XmlElement("generateGetMethods")]
-		public bool GenerateGetMethods { get; set; }
-		[XmlElement("generateGetByForeignKeys")]
-		public bool GenerateGetByForeignKeys { get; set; }
-		[XmlElement("generateBreadcrumbs")]
-		public bool GenerateBreadcrumbs { get; set; }
 		[XmlElement("checkObjectsValidation")]
 		public bool CheckObjectsValidation { get; set; }
 		[XmlArray("customUsings"), XmlArrayItem("using")]
@@ -52,14 +44,10 @@ namespace Sogen.Generator.Configuration {
 		#region Constructors
 		public BLToolkitConfiguration() {
 			this.RootNamespace = "Sogen.DB";
-			this.DataModelName = "DataModel";
+			this.DataModelNamePostfix = "DataModel";
 			this.DataModelAccessModifier = "public";
 			this.ExportPath = "C:\\SogenGenerated\\";
 			this.GenerateEmptyPartialClass =
-				this.GenerateInsertUpdateDelete =
-				this.GenerateGetMethods =
-				this.GenerateGetByForeignKeys =
-				this.GenerateBreadcrumbs =
 				this.CheckObjectsValidation = true;
 			this.Provider = DataProviderEnums.Providers.MSSqlServer;
 			this.Language = WriterEnums.Languages.CSharp;

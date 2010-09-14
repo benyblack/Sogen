@@ -42,7 +42,7 @@ namespace Sogen.Generator {
 			Validate(schema);
 			this.AddMessage("* Schema {0}", schema.Namespace);
 			string rootNamespace = string.Format("{0}.{1}", Config.RootNamespace, schema.Namespace);
-			string dataMadoleName = Config.DataModelName;
+			string dataMadoleName = string.Format("{0}{1},",schema.Namespace, Config.DataModelNamePostfix);
 			var writer = WriterBase.Create(Config.Language);
 			writer.Add(GetHeader());
 			writer.AddUsing("System", "System.Collections.Generic", "System.Linq", "System.Linq.Expressions", "BLToolkit.Data", "BLToolkit.Data.Linq", "BLToolkit.DataAccess", "BLToolkit.Mapping");
@@ -134,9 +134,9 @@ namespace Sogen.Generator {
 			this.AddMessage("* * * * Foreign Keys");
 			foreach (ForeignKey fk in table.ForeignKeys.Values)
 				Generate(fk, ref writer);
-			if (Config.GenerateInsertUpdateDelete && !table.IsView)
+			if (!table.IsView)
 				writer.Add(GenerateInsertUpdateDelete(table));
-			if (Config.GenerateGetMethods && !table.IsView)
+			if (!table.IsView)
 				writer.Add(GenerateGetMethods(table));
 
 			writer.AddEndClass(table.ClassName);
@@ -153,7 +153,7 @@ namespace Sogen.Generator {
 				writer.AddXmlComment(string.Format("Get a {0} from db", table.ClassName));
 				writer.AddFormatLine("public static {0} GetBy{1} (", table.ClassName, uk.MemberName).pushIndent();
 				writer.Add(Helper.GetColumnList(uk.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
-				writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
+				writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
 				writer.pushIndent();
 
 				writer.AddLine("var query =").pushIndent();
@@ -177,9 +177,9 @@ namespace Sogen.Generator {
 			// Insert
 			writer.AddLine();
 			writer.AddXmlComment("Insert this instance to db");
-			writer.AddLine("public void Insert() {");
+			writer.AddLine("public virtual void Insert() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			if (hasIdentity)
 				writer.AddFormatLine("this.{0} = ", table.IdentityColumn.FiledName).pushIndent();
@@ -209,9 +209,9 @@ namespace Sogen.Generator {
 			// Update
 			writer.AddLine();
 			writer.AddXmlComment("Update this instance in db");
-			writer.AddLine("public void Update() {");
+            writer.AddLine("public virtual void Update() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Update [{0}].[{1}]  set ", table.Parent.SchemaName, table.TableName).pushIndent();
@@ -229,9 +229,9 @@ namespace Sogen.Generator {
 			// Delete
 			writer.AddLine();
 			writer.AddXmlComment("Delete this instance from db");
-			writer.AddLine("public void Delete() {");
+            writer.AddLine("public virtual void Delete() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{",table.Parent.SchemaName , Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
@@ -248,14 +248,14 @@ namespace Sogen.Generator {
 			// Static Delete
 			writer.AddLine();
 			writer.AddXmlComment(string.Format("Delete a {0} from db", table.ClassName));
-			writer.AddLine("public static void Delete (").pushIndent();
+            writer.AddLine("public virtual static void Delete (").pushIndent();
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
 			writer.AddFormatLine("var {0} = new {1}();", table.ClassName.ToCamel(), table.ClassName);
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns,
 				   string.Format("{0}.{{property}} = {{camelprop}};", table.ClassName.ToCamel()),
 				  " \r\n", false, false));
 			writer.AddLine();
-			writer.AddFormatLine("using ({0}.{1} db = new {0}.{1}()) {{", table.Parent.SchemaName, Config.DataModelName);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
@@ -355,7 +355,7 @@ namespace Sogen.Generator {
 				writer.Add(Helper.GetColumnList(fk.ThisColumns, "this.{filed}{value}", ", ", false, false)).AddLine(");");
 
 			} else {
-				writer.AddFormatLine("using ({0}.{1}.{2} db = new {0}.{1}.{2}()) {{", Config.RootNamespace, fk.OtherTable.Parent.Namespace, Config.DataModelName).pushIndent();
+				writer.AddFormatLine("using ({0}.{1}.{1}{2} db = new {0}.{1}.{1}{2}()) {{", Config.RootNamespace, fk.OtherTable.Parent.Namespace, Config.DataModelNamePostfix).pushIndent();
 				writer.AddLine("var query =").pushIndent();
 				writer.AddFormatLine("from q in db.{0}", fk.OtherTable.ClassName);
 				writer.AddLine("where").pushIndent();
