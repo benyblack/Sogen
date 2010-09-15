@@ -248,7 +248,7 @@ namespace Sogen.Generator {
 			// Static Delete
 			writer.AddLine();
 			writer.AddXmlComment(string.Format("Delete a {0} from db", table.ClassName));
-            writer.AddLine("public virtual static void Delete (").pushIndent();
+            writer.AddLine("public static void Delete (").pushIndent();
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
 			writer.AddFormatLine("var {0} = new {1}();", table.ClassName.ToCamel(), table.ClassName);
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns,
