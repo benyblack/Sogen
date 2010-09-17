@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Xml.Serialization;
-using System.IO;
 using Sogen.Writer;
 using Sogen.Data.MetaData;
 using Sogen.Data.DataProvider;
@@ -20,12 +19,21 @@ namespace Sogen.Generator.Configuration {
 
 		[XmlElement("rootNamespace")]
 		public string RootNamespace { get; set; }
-        [XmlElement("dataModelNamePostfix")]
+		[XmlElement("dataModelNamePostfix")]
 		public string DataModelNamePostfix { get; set; }
 		[XmlElement("dataModelAccessModifier")]
 		public string DataModelAccessModifier { get; set; }
+		[XmlIgnore()]
+		private string _exportPath;
 		[XmlElement("exportPath")]
-		public string ExportPath { get; set; }
+		public string ExportPath {
+			get { return this._exportPath; }
+			set {
+				if (!value.EndsWith("\\"))
+					value += "\\";
+				this._exportPath = value;
+			}
+		}
 		[XmlElement("generateEmptyPartialClass")]
 		public bool GenerateEmptyPartialClass { get; set; }
 		[XmlElement("checkObjectsValidation")]
@@ -52,7 +60,7 @@ namespace Sogen.Generator.Configuration {
 			this.Provider = DataProviderEnums.Providers.MSSqlServer;
 			this.Language = WriterEnums.Languages.CSharp;
 			this.MSSqlConfig = new MSSqlConfiguration();
-			this.CustomUsings = new string[] { "Library Name" };
+			this.CustomUsings = new string[] { "" };
 
 		}
 		#endregion

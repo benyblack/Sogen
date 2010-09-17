@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
 using System.Configuration;
 using Sogen.Common;
 using Sogen.Data.DataProvider;
@@ -10,15 +9,13 @@ using Sogen.Data;
 using Sogen.Data.MetaData;
 using Sogen.Writer;
 
-
 namespace Sogen.Generator {
 	public class BLToolkitGenerator {
 
 		#region Properties & Fileds
-		public List<string> Messages { get; private set; }
-		public List<Validation> Warnings { get; private set; }
 		internal ProviderBase Provider { get; private set; }
 		internal Configuration.BLToolkitConfiguration Config { get { return this.Provider.Config; } }
+		internal Generator.Result.SogenResult Result { get; private set; }
 
 		#endregion
 
@@ -30,8 +27,7 @@ namespace Sogen.Generator {
 		#region Constructors
 		private BLToolkitGenerator(ProviderBase provider) {
 			this.Provider = provider;
-			this.Messages = new List<string>();
-			this.Warnings = new List<Validation>();
+			this.Result = new Result.SogenResult();
 			this.Provider.OnMessageAdd += new OnMessageAddHandler(Provider_OnMessageAdd);
 		}
 		#endregion
@@ -42,7 +38,7 @@ namespace Sogen.Generator {
 			Validate(schema);
 			this.AddMessage("* Schema {0}", schema.Namespace);
 			string rootNamespace = string.Format("{0}.{1}", Config.RootNamespace, schema.Namespace);
-			string dataMadoleName = string.Format("{0}{1},",schema.Namespace, Config.DataModelNamePostfix);
+			string dataMadoleName = string.Format("{0}{1},", schema.Namespace, Config.DataModelNamePostfix);
 			var writer = WriterBase.Create(Config.Language);
 			writer.Add(GetHeader());
 			writer.AddUsing("System", "System.Collections.Generic", "System.Linq", "System.Linq.Expressions", "BLToolkit.Data", "BLToolkit.Data.Linq", "BLToolkit.DataAccess", "BLToolkit.Mapping");
@@ -71,21 +67,14 @@ namespace Sogen.Generator {
 				Generate(schema.Enums, schema.Namespace, ref writer);
 			writer.AddEndNamespace(rootNamespace);
 
-			string filename = string.Format("{0}{1}.generated.cs", GetExportFolder(), schema.Namespace);
-			if (File.Exists(filename))
-				File.Delete(filename);
-			File.WriteAllText(filename, writer.Text, System.Text.Encoding.UTF8);
-			this.AddMessage("* * Create File {0}", filename);
+			this.Result.Files.Add(new Result.ResultFile(schema.Namespace, "cs", string.Empty, true, writer.Text));
+
+			this.AddMessage("* * Generate File {0}.cs", schema.Namespace);
 
 			if (!Config.GenerateEmptyPartialClass)
 				return;
-			string schemaFolder = string.Format("{0}{1}\\", GetExportFolder(), schema.Namespace);
-			if (!Directory.Exists(schemaFolder))
-				Directory.CreateDirectory(schemaFolder);
+			string schemaFolder = string.Format("{0}\\", schema.Namespace);
 			foreach (Table table in schema.Tables.Values) {
-				string classFilename = string.Format("{0}{1}.cs", schemaFolder, table.ClassName);
-				if (File.Exists(classFilename))
-					continue;
 				writer.clear();
 				writer.AddUsing("System", "System.Collections.Generic", "System.Linq", "System.Linq.Expressions", "BLToolkit.Data", "BLToolkit.Data.Linq", "BLToolkit.DataAccess", "BLToolkit.Mapping");
 				writer.AddUsing(Config.CustomUsings);
@@ -96,8 +85,8 @@ namespace Sogen.Generator {
 				writer.AddLine();
 				writer.AddEndClass(table.ClassName);
 				writer.AddEndNamespace(rootNamespace);
-				File.WriteAllText(classFilename, writer.Text, System.Text.Encoding.UTF8);
-				this.AddMessage("* * Create File {0}", classFilename);
+				this.Result.Files.Add(new Result.ResultFile(table.ClassName, "cs", schemaFolder, false, writer.Text));
+				this.AddMessage("* * Generate File {0}{1}.cs", schemaFolder, table.ClassName);
 			}
 
 		}
@@ -209,7 +198,7 @@ namespace Sogen.Generator {
 			// Update
 			writer.AddLine();
 			writer.AddXmlComment("Update this instance in db");
-            writer.AddLine("public virtual void Update() {");
+			writer.AddLine("public virtual void Update() {");
 			writer.pushIndent();
 			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
 			writer.pushIndent();
@@ -229,9 +218,9 @@ namespace Sogen.Generator {
 			// Delete
 			writer.AddLine();
 			writer.AddXmlComment("Delete this instance from db");
-            writer.AddLine("public virtual void Delete() {");
+			writer.AddLine("public virtual void Delete() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{",table.Parent.SchemaName , Config.DataModelNamePostfix);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
@@ -248,7 +237,7 @@ namespace Sogen.Generator {
 			// Static Delete
 			writer.AddLine();
 			writer.AddXmlComment(string.Format("Delete a {0} from db", table.ClassName));
-            writer.AddLine("public static void Delete (").pushIndent();
+			writer.AddLine("public static void Delete (").pushIndent();
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
 			writer.AddFormatLine("var {0} = new {1}();", table.ClassName.ToCamel(), table.ClassName);
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns,
@@ -430,33 +419,9 @@ namespace Sogen.Generator {
 
 			writer.AddEndClass("Configs");
 			writer.AddEndNamespace(Config.RootNamespace);
-			string filename = string.Format("{0}Configs.generated.cs", GetExportFolder());
-			if (File.Exists(filename))
-				File.Delete(filename);
-			File.WriteAllText(filename, writer.Text, System.Text.Encoding.UTF8);
-			this.AddMessage("* * Create File {0}", filename);
-		}
 
-		private void CreateWarningFile() {
-			if (!Config.CheckObjectsValidation)
-				return;
-			StringBuilder sb = new StringBuilder();
-			string filename = string.Format(string.Format("{0}Warning.txt", GetExportFolder()));
-			if (File.Exists(filename))
-				File.Delete(filename);
-			for (int i = 0; i < this.Warnings.Count; i++) {
-				string rules = string.Empty;
-				foreach (MetaDataEnums.ValidationRules rule in this.Warnings[i].Rules) {
-					rules += string.Format("{0}, ", rule.ToString());
-				}
-				if (rules.Length > 0)
-					rules = rules.Remove(rules.Length - 2);
-				sb.AppendLine(string.Format("{0}  * Must be {1} ", this.Warnings[i].Objectname, rules));
-			}
-			if (sb.Length > 0) {
-				File.WriteAllText(filename, sb.ToString());
-				this.AddMessage("* * Create File {0}", filename);
-			}
+			this.Result.Files.Add(new Result.ResultFile("Configs", "cs", string.Empty, true, writer.Text));
+			this.AddMessage("* * Generate File Configs.cs");
 		}
 
 		private DB NormalizeForeignKeys(DB db) {
@@ -608,6 +573,8 @@ namespace Sogen.Generator {
 		}
 
 		private void Validate(IValidatable obj) {
+			if (!Config.CheckObjectsValidation)
+				return;
 			Validation validation = new Validation();
 			validation.Objectname = obj.SqlFullName;
 			foreach (MetaDataEnums.ValidationRules rule in obj.ValidationRoles) {
@@ -635,7 +602,7 @@ namespace Sogen.Generator {
 				}
 			}
 			if (validation.Rules.Count > 0)
-				this.Warnings.Add(validation);
+				this.Result.Warnings.Add(validation);
 		}
 
 		private string GetHeader() {
@@ -659,27 +626,17 @@ namespace Sogen.Generator {
 		}
 
 		private void AddMessage(string message) {
-			this.Messages.Add(message);
+			this.Result.Messages.Add(message);
 			if (OnMessageAdd != null)
 				this.OnMessageAdd(message);
 		}
 
-		private string GetExportFolder() {
-			var result = string.Format("{0}{1}",
-									   Config.ExportPath,
-									   (Config.ExportPath.EndsWith("\\")) ? "" : "\\");
-			if (!Directory.Exists(result)) {
-				Directory.CreateDirectory(result);
-				this.AddMessage(string.Format("{0} Created Successfully", result));
-			}
-			return result;
-		}
 
 		#endregion
 
 		#region Public Methods
 
-		public void Execute() {
+		public Result.SogenResult Execute() {
 			this.AddMessage(Helper.SogenTitle);
 			this.AddMessage("- Fetch Data :::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 			DB db = Provider.GetMetaData();
@@ -694,21 +651,11 @@ namespace Sogen.Generator {
 				Generate(schema);
 
 			CreateConfigFile(db);
-			CreateWarningFile();
 
 			this.AddMessage("- Generate Code : done:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 
-			StringBuilder sb = new StringBuilder();
-			sb = new StringBuilder();
-			for (int i = 0; i < this.Messages.Count; i++) {
-				sb.AppendLine(this.Messages[i]);
-			}
-			File.WriteAllText(string.Format("{0}Sogen.log", GetExportFolder()), sb.ToString());
+			return this.Result;
 		}
-
-
-
-
 
 		#region Static Methods
 

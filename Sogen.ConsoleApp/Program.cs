@@ -19,7 +19,7 @@ namespace Sogen.ConsoleApp {
 				return;
 			}
 
-			string	xml = File.ReadAllText(filename);
+			string xml = File.ReadAllText(filename);
 			GeneratorBL(xml);
 		}
 		private static void GeneratorBL(string xml) {
@@ -39,11 +39,28 @@ namespace Sogen.ConsoleApp {
 				Console.ReadKey();
 				return;
 			}
-			
+
 			generator.OnMessageAdd += new BLToolkitGenerator.OnMessageAddHandler(generator_OnMessageAdd);
 			Console.WriteLine("Connected to db Successfully");
 
-			generator.Execute();
+			var result = generator.Execute();
+
+			if (result.Warnings.Count > 0)
+				File.WriteAllText(string.Format("{0}Warning.txt", config.ExportPath), result.WarningsString);
+			if (result.Messages.Count > 0)
+				File.WriteAllText(string.Format("{0}Sogen.log", config.ExportPath), result.MessagesString);
+			foreach (Sogen.Generator.Result.ResultFile file in result.Files) {
+				string path = string.Format("{0}{1}", config.ExportPath, file.RelativePath);
+				if (!Directory.Exists(path))
+					Directory.CreateDirectory(path);
+				string filename = string.Format("{0}{1}.{2}", path, file.Filename, file.FileExtention);
+				if (!File.Exists(filename))
+					File.WriteAllText(filename, file.FileContent, Encoding.UTF8);
+				else if (file.Overwrite) {
+					File.Delete(filename);
+					File.WriteAllText(filename, file.FileContent, Encoding.UTF8);
+				}
+			}
 
 			System.Diagnostics.Process.Start(config.ExportPath);
 			//	Console.ReadKey();
@@ -52,7 +69,7 @@ namespace Sogen.ConsoleApp {
 		private static void FileNotFound(string filename) {
 			Console.WriteLine(string.Format("Can't Find File '{0}'", filename));
 			Console.Write("Create Template Config File (Y,N)? ");
-			var key =  Console.ReadKey();
+			var key = Console.ReadKey();
 			if (key.KeyChar.ToString().ToLower() == "y") {
 				BLToolkitConfiguration config = new BLToolkitConfiguration();
 				File.WriteAllText(filename, config.ToXml());

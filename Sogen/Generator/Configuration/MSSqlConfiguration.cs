@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Xml.Serialization;
-using System.IO;
 using Sogen.Writer;
 using Sogen.Data.MetaData;
 using Sogen.Data.DataProvider;
@@ -37,12 +36,12 @@ namespace Sogen.Generator.Configuration {
 
 
 		public MSSqlConfiguration() {
-			this.Server = "Server name";
-			this.Database = "DB name";
+			this.Server = "erver";
+			this.Database = "db";
 			this.Username = "user";
 			this.Password = "pass";
 			this.WindowsAuthentication = false;
-			this.Schemas = new string[] { "Schema name"};
+			this.Schemas = new string[] { "" };
 			this.GenerateObjectForViews = true;
 		}
 	}

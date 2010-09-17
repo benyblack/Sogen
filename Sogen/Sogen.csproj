@@ -62,6 +62,8 @@
     <Compile Include="Data\MetaData\DB.cs" />
     <Compile Include="Generator\BLToolkitGenerator.cs" />
     <Compile Include="Generator\Configuration\MSSqlConfiguration.cs" />
+    <Compile Include="Generator\Result\ResultFile.cs" />
+    <Compile Include="Generator\Result\SogenResult.cs" />
     <Compile Include="Generator\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Writer\CSharpWriter.cs" />
