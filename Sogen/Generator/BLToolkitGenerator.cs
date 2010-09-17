@@ -280,7 +280,7 @@ namespace Sogen.Generator {
 									.Replace("{schema}", column.Parent.Parent.Namespace)
 									.Replace("{table}", column.Parent.ClassName)
 									.Replace("{name}", column.PropertyName)
-									.Replace("{type}", column.Type.CSharpType)
+									.Replace("{type}", (column.IsEnum)? column.EnumType:column.Type.CSharpType)
 									.Replace("{type?}", column.GetType));
 			}
 
