@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<sogenBLToolkitGeneratorConfiguration>
+  <rootNamespace>Sogen.Demo.DB</rootNamespace>
+  <dataModelNamePostfix>DataModel</dataModelNamePostfix>
+  <dataModelAccessModifier>public</dataModelAccessModifier>
+  <exportPath>C:\SogenGenerated\</exportPath>
+  <generateEmptyPartialClass>true</generateEmptyPartialClass>
+  <checkObjectsValidation>true</checkObjectsValidation>
+  <customUsings>
+    <using />
+  </customUsings>
+  <provider>MSSqlServer</provider>
+  <language>CSharp</language>
+  <MSSqlConfig>
+    <server>.\sql2k8</server>
+    <database>SogenDemoDB</database>
+    <username>user</username>
+    <password>pass</password>
+    <useWindowsAuthentication>true</useWindowsAuthentication>
+    <schemas>
+      <schema>Members</schema>
+	  <schema>Common</schema>
+	  <schema>Contacts</schema>
+	  <schema>Messages</schema>
+    </schemas>
+    <generateObjectForViews>true</generateObjectForViews>
+  </MSSqlConfig>
+</sogenBLToolkitGeneratorConfiguration>
