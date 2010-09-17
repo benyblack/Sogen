@@ -22,6 +22,8 @@ namespace Sogen.Data.MetaData {
 		public string Description { get; set; }
 		public DataType Type { get; set; }
 
+
+
 		private Dictionary<string, string> _properties = new Dictionary<string, string>();
 		public Dictionary<string, string> Properties {
 			get { return this._properties; }

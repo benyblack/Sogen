@@ -193,13 +193,14 @@ namespace Sogen.Common {
 			foreach (Data.MetaData.Column col in cols.Values) {
 				if (hideIdentities && col.IsIdentity)
 					continue;
+				 
 				if (hidePrimaries && col.IsPrimaryKey)
 					continue;
 				string tmp = format.Replace("{column}", col.ColumnName)
 											.Replace("{property}", col.PropertyName)
 											.Replace("{filed}", col.FiledName)
-											.Replace("{type}", (col.IsNullable) ? col.Type.CSharpNullableType : col.Type.CSharpType)
-											.Replace("{value}", (col.IsNullable)? (col.Type.CSharpNullableType == col.Type.CSharpType ? "":".Value"):"")
+											.Replace("{type}", col.GetType)
+											.Replace("{value}", (col.IsEnum)? "":(col.IsNullable)? (col.Type.CSharpNullableType == col.Type.CSharpType ? "":".Value"):"")
 											.Replace("{camelprop}", col.PropertyName.ToNormalCamel());
 
 				result += tmp + delimiter;

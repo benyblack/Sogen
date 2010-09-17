@@ -538,6 +538,11 @@ namespace Sogen.Data.DataProvider {
 		}
 
 		private MetaData.Column SMOGetIndexColumn(MetaData.Table table, Smo.IndexedColumn c) {
+			var col = SMOOrginalColumn(c);
+			foreach (MetaData.Column metaCol in table.Columns.Values) {
+				if (metaCol.ColumnName == col.Name)
+					return metaCol;
+			}
 			return SMOGetColumn(table, SMOOrginalColumn(c));
 		}
 

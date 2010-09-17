@@ -36,7 +36,7 @@ namespace Sogen.Generator.Configuration {
 
 
 		public MSSqlConfiguration() {
-			this.Server = "erver";
+			this.Server = "server";
 			this.Database = "db";
 			this.Username = "user";
 			this.Password = "pass";

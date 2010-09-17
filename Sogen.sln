@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sogen", "Sogen\Sogen.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sogen.ConsoleApp", "Sogen.ConsoleApp\Sogen.ConsoleApp.csproj", "{432F76D4-8C62-4A9A-AE30-55761B3DE93B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sogen.Demo", "Sogen.Demo\Sogen.Demo.csproj", "{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{432F76D4-8C62-4A9A-AE30-55761B3DE93B}.Release|Mixed Platforms.Build.0 = Release|x86
 		{432F76D4-8C62-4A9A-AE30-55761B3DE93B}.Release|x86.ActiveCfg = Release|x86
 		{432F76D4-8C62-4A9A-AE30-55761B3DE93B}.Release|x86.Build.0 = Release|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Debug|x86.ActiveCfg = Debug|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Debug|x86.Build.0 = Debug|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Release|Any CPU.ActiveCfg = Release|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Release|Mixed Platforms.Build.0 = Release|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Release|x86.ActiveCfg = Release|x86
+		{5C0DCF56-4202-42F6-B5E2-B5A4234712C2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

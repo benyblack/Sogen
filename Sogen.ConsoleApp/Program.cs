@@ -45,10 +45,19 @@ namespace Sogen.ConsoleApp {
 
 			var result = generator.Execute();
 
+			if (!Directory.Exists(config.ExportPath))
+				Directory.CreateDirectory(config.ExportPath);
+
+			if (File.Exists(string.Format("{0}Warning.txt", config.ExportPath)))
+				File.Delete(string.Format("{0}Warning.txt", config.ExportPath));
 			if (result.Warnings.Count > 0)
 				File.WriteAllText(string.Format("{0}Warning.txt", config.ExportPath), result.WarningsString);
+
+			if (File.Exists(string.Format("{0}Sogen.log", config.ExportPath)))
+				File.Delete(string.Format("{0}Sogen.log", config.ExportPath));
 			if (result.Messages.Count > 0)
 				File.WriteAllText(string.Format("{0}Sogen.log", config.ExportPath), result.MessagesString);
+
 			foreach (Sogen.Generator.Result.ResultFile file in result.Files) {
 				string path = string.Format("{0}{1}", config.ExportPath, file.RelativePath);
 				if (!Directory.Exists(path))

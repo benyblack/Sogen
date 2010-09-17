@@ -38,7 +38,7 @@ namespace Sogen.Generator {
 			Validate(schema);
 			this.AddMessage("* Schema {0}", schema.Namespace);
 			string rootNamespace = string.Format("{0}.{1}", Config.RootNamespace, schema.Namespace);
-			string dataMadoleName = string.Format("{0}{1},", schema.Namespace, Config.DataModelNamePostfix);
+			string dataMadoleName = string.Format("{0}{1}", schema.Namespace, Config.DataModelNamePostfix);
 			var writer = WriterBase.Create(Config.Language);
 			writer.Add(GetHeader());
 			writer.AddUsing("System", "System.Collections.Generic", "System.Linq", "System.Linq.Expressions", "BLToolkit.Data", "BLToolkit.Data.Linq", "BLToolkit.DataAccess", "BLToolkit.Mapping");
@@ -588,7 +588,7 @@ namespace Sogen.Generator {
 							validation.Rules.Add(MetaDataEnums.ValidationRules.CamelCase);
 						break;
 					case MetaDataEnums.ValidationRules.Singular:
-						if (obj.SqlName != Plurals.ToSingular(obj.SqlName))
+						if (Plurals.TestIsPlural(obj.SqlName))
 							validation.Rules.Add(MetaDataEnums.ValidationRules.Singular);
 						break;
 					case MetaDataEnums.ValidationRules.Plural:
@@ -638,6 +638,10 @@ namespace Sogen.Generator {
 
 		public Result.SogenResult Execute() {
 			this.AddMessage(Helper.SogenTitle);
+			if (Config.MSSqlConfig.Schemas.Length == 0) {
+				this.AddMessage("Error! : Select schemas to generate.");
+				return this.Result;
+			}
 			this.AddMessage("- Fetch Data :::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
 			DB db = Provider.GetMetaData();
 			this.AddMessage("- Fetch Data : done:::: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:MM:ss"));
