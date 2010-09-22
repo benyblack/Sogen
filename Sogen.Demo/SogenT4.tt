@@ -1,5 +1,5 @@
 ﻿<#@ template language="C#" hostspecific="True" #>
-<#@ assembly name="D:\Documents\Visual Studio 2010\Projects\Sogen\Sogen\bin\Debug\Sogen.dll" #>
+<#@ assembly name="D:\Sogen\Sogen\bin\Debug\Sogen.dll" #>
 <#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="EnvDTE" #>
@@ -28,27 +28,27 @@
 
 <#
     
-
+	
+	// ===========================================================
 	Console.WriteLine(Sogen.Common.Helper.SogenTitle);
 	BLToolkitConfiguration bc = new BLToolkitConfiguration();
-	bc.CheckObjectsValidation = false;
-	bc.CustomUsings = new String[]{};
-	bc.DataModelAccessModifier = "public";
-	bc.DataModelNamePostfix = "Entities";
-	bc.ExportPath = "";
-	bc.GenerateEmptyPartialClass = false;
-	bc.Language =  Sogen.Writer.WriterEnums.Languages.CSharp;
+	bc.CheckObjectsValidation = false; //
+	bc.CustomUsings = new String[]{}; //
+	bc.DataModelAccessModifier = "public"; // 
+	bc.DataModelNamePostfix = "Entities"; // 
+	bc.GenerateEmptyPartialClass = false; 
+	bc.Language =  Sogen.Writer.WriterEnums.Languages.CSharp; 
 	MSSqlConfiguration msconf = new MSSqlConfiguration();
-	msconf.Database = "Mahan";
-	msconf.GenerateObjectForViews = false;
-	msconf.Password = "123";
-	msconf.Schemas = new String[]{"dbo"};
-	msconf.Server = ".";
-	msconf.Username = "sa";
-	msconf.WindowsAuthentication = false;
+	msconf.Database = "Avval"; //
+	msconf.GenerateObjectForViews = false; //
+	msconf.Password = "123"; //
+	msconf.Schemas = new String[]{"Avval"}; //
+	msconf.Server = @".\sql2k8"; //
+	msconf.Username = "sa"; //
+	msconf.WindowsAuthentication = false; //
 	bc.MSSqlConfig = msconf;
 	bc.Provider = Sogen.Data.DataProvider.DataProviderEnums.Providers.MSSqlServer;
-	bc.RootNamespace = "Sogen.Data";
+	bc.RootNamespace = "Sogen.Data"; //
 	
 	BLToolkitGenerator generator = BLToolkitGenerator.Create(bc);
 	//BLToolkitGenerator generator = Gen();
