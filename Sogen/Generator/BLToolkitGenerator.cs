@@ -142,7 +142,7 @@ namespace Sogen.Generator {
 				writer.AddXmlComment(string.Format("Get a {0} from db", table.ClassName));
 				writer.AddFormatLine("public static {0} GetBy{1} (", table.ClassName, uk.MemberName).pushIndent();
 				writer.Add(Helper.GetColumnList(uk.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
-				writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
+				writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 				writer.pushIndent();
 
 				writer.AddLine("var query =").pushIndent();
@@ -168,7 +168,7 @@ namespace Sogen.Generator {
 			writer.AddXmlComment("Insert this instance to db");
 			writer.AddLine("public virtual void Insert() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			if (hasIdentity)
 				writer.AddFormatLine("this.{0} = ", table.IdentityColumn.FiledName).pushIndent();
@@ -200,7 +200,7 @@ namespace Sogen.Generator {
 			writer.AddXmlComment("Update this instance in db");
 			writer.AddLine("public virtual void Update() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Update [{0}].[{1}]  set ", table.Parent.SchemaName, table.TableName).pushIndent();
@@ -220,7 +220,7 @@ namespace Sogen.Generator {
 			writer.AddXmlComment("Delete this instance from db");
 			writer.AddLine("public virtual void Delete() {");
 			writer.pushIndent();
-			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
@@ -244,7 +244,7 @@ namespace Sogen.Generator {
 				   string.Format("{0}.{{property}} = {{camelprop}};", table.ClassName.ToCamel()),
 				  " \r\n", false, false));
 			writer.AddLine();
-			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.SchemaName, Config.DataModelNamePostfix);
+			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
 			writer.AddLine("db.SetCommand(@\"").pushIndent();
 			writer.AddFormatLine("Delete [{0}].[{1}] ", table.Parent.SchemaName, table.TableName);
