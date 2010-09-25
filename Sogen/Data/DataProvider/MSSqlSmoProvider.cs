@@ -488,6 +488,7 @@ namespace Sogen.Data.DataProvider {
 				case Smo.SqlDataType.DateTime:
 				case Smo.SqlDataType.DateTime2:
 				case Smo.SqlDataType.Date:
+				case Smo.SqlDataType.Time:
 					result = result.Replace("\"", "");
 					result = (result == "getdate")
 								? "DateTime.Now"
