@@ -151,10 +151,23 @@ namespace Sogen.Generator {
 				writer.Add(Helper.GetColumnList(uk.Columns, "q.{property} == {camelprop}", " && ", false, false));
 
 				writer.popIndent().AddLine().AddLine("select q;").popIndent();
+				writer.AddLine("try {").pushIndent();
 				writer.AddFormatLine("return query.Single<{0}>();", table.ClassName).popIndent().AddLine("}");
+				writer.AddLine("catch (Exception) {").pushIndent();
+				writer.AddLine("return null;").popIndent().AddLine("}");
+				writer.popIndent().AddLine("}");
 
 				writer.popIndent();
 				writer.AddFormatLine("}} // GetBy{0}", uk.MemberName);
+				try 
+	{	        
+		
+	}
+	catch (Exception)
+	{
+		
+		throw;
+	}
 			}
 			return writer.Text;
 		}

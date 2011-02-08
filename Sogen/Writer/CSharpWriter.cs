@@ -13,7 +13,7 @@ namespace Sogen.Writer {
 		#endregion
 
 		public override WriterBase AddComment(string s) {
-			this.AddFormatLine("// {0}", s);
+			this.AddFormatLine("// {0}", s.Replace("\r\n", "\r\n/// "));
 			return this;
 
 		}
@@ -126,7 +126,7 @@ namespace Sogen.Writer {
 			if (string.IsNullOrEmpty(s))
 				return this;
 			this.AddLine("/// <summary>");
-			this.AddFormatLine("/// {0}", s);
+			this.AddFormatLine("/// {0}", s.Replace("\r\n", "\r\n/// "));
 			this.AddLine("/// </summary>");
 			return this;
 		}
