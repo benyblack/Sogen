@@ -347,6 +347,7 @@ namespace Sogen.Generator {
 			writer.AddFormatLine("public {0} {1} {{", type, fk.MemberName).pushIndent();
 			writer.AddLine("get {").pushIndent();
 			writer.AddFormatLine("if (this.{0} == null)", fk.MemberName.ToNormalCamelWithUnderscore()).pushIndent();
+			// TODO
 			writer.AddFormat("if (").Add(Helper.GetColumnList(fk.ThisColumns, "this.{filed} != null", "&& ", false, false)).AddLine(")").pushIndent();
 			if (fk.AssociationType == MetaDataEnums.AssociationType.ManyToOne || fk.AssociationType == MetaDataEnums.AssociationType.OneToOne) {
 				writer.AddFormat("this.{0} = {1}.{2}.{3}.GetBy{4}(", fk.MemberName.ToNormalCamelWithUnderscore()

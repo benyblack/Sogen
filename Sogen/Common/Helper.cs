@@ -24,7 +24,8 @@ namespace Sogen.Common {
 		}
 
 		private static List<string> ReserverdWords {
-			get { return new List<string>() { "abstract", "as", "base", "bool", "break", "by", "byte", "case",
+			get {
+				return new List<string>() { "abstract", "as", "base", "bool", "break", "by", "byte", "case",
 				"catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do",
 				"double", "descending", "explicit", "event", "extern", "else", "enum", "false", "finally", "fixed",
 				"float", "for", "foreach", "from", "goto", "group", "if", "implicit", "in", "int", "interface", 
@@ -32,7 +33,8 @@ namespace Sogen.Common {
 				"override", "orderby", "params","private", "protected", "public", "readonly", "ref", "return", 
 				"switch", "struct", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "select", 
 				"this", "throw", "true", "try", "typeof","uint", "ulong", "unchecked", "unsafe", "ushort", "using", 
-				"var", "virtual", "volatile", "void", "while", "where", "yield" }; }
+				"var", "virtual", "volatile", "void", "while", "where", "yield" };
+			}
 		}
 
 
@@ -121,7 +123,7 @@ namespace Sogen.Common {
 
 		internal static string ToNormal(this string s) {
 			//if (s.ToUpper() == "ID")
-				//return "ID";
+			//return "ID";
 			s = s.Replace("_", "").Replace(" ", "");
 			if (ReserverdWords.Contains(s.ToLower()))
 				s = s + "1";
@@ -173,7 +175,8 @@ namespace Sogen.Common {
 				e.Name = lines[0].Replace("\r", "").Replace("\n", "").ToNormalPascal();
 				for (int i = 1; i < lines.Length; i++) {
 					var value = lines[i].Replace("\r", "").Replace("\n", "").Split(':');
-					e.Values.Add(value[0], new KeyValuePair<string, string>(value[0], value[1].ToNormalPascal()));
+					if (value.Length == 2)
+						e.Values.Add(value[0], new KeyValuePair<string, string>(value[0], value[1].ToNormalPascal()));
 				}
 				return e;
 			} catch (Exception) {
@@ -193,14 +196,14 @@ namespace Sogen.Common {
 			foreach (Data.MetaData.Column col in cols.Values) {
 				if (hideIdentities && col.IsIdentity)
 					continue;
-				 
+
 				if (hidePrimaries && col.IsPrimaryKey)
 					continue;
 				string tmp = format.Replace("{column}", col.ColumnName)
 											.Replace("{property}", col.PropertyName)
 											.Replace("{filed}", col.FiledName)
 											.Replace("{type}", col.GetType)
-											.Replace("{value}", (col.IsEnum)? "":(col.IsNullable)? (col.Type.CSharpNullableType == col.Type.CSharpType ? "":".Value"):"")
+											.Replace("{value}", (col.IsEnum) ? "" : (col.IsNullable) ? (col.Type.CSharpNullableType == col.Type.CSharpType ? "" : ".Value") : "")
 											.Replace("{camelprop}", col.PropertyName.ToNormalCamel());
 
 				result += tmp + delimiter;
