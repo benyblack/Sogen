@@ -140,7 +140,7 @@ namespace Sogen.Generator {
 				Validate(uk);
 				writer.AddLine();
 				writer.AddXmlComment(string.Format("Get a {0} from db", table.ClassName));
-				writer.AddFormatLine("public static {0} GetBy{1} (", table.ClassName, uk.MemberName).pushIndent();
+				writer.AddFormatLine("{0} static {1} GetBy{2} (", Config.DataAccessMethodsAccessModifier, table.ClassName, uk.MemberName).pushIndent();
 				writer.Add(Helper.GetColumnList(uk.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
 				writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 				writer.pushIndent();
@@ -179,7 +179,7 @@ namespace Sogen.Generator {
 			// Insert
 			writer.AddLine();
 			writer.AddXmlComment("Insert this instance to db");
-			writer.AddLine("public virtual void Insert() {");
+			writer.AddFormatLine("{0} virtual void Insert() {{", Config.DataAccessMethodsAccessModifier);
 			writer.pushIndent();
 			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
@@ -211,7 +211,7 @@ namespace Sogen.Generator {
 			// Update
 			writer.AddLine();
 			writer.AddXmlComment("Update this instance in db");
-			writer.AddLine("public virtual void Update() {");
+			writer.AddFormatLine("{0} virtual void Update() {{", Config.DataAccessMethodsAccessModifier);
 			writer.pushIndent();
 			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
@@ -231,7 +231,7 @@ namespace Sogen.Generator {
 			// Delete
 			writer.AddLine();
 			writer.AddXmlComment("Delete this instance from db");
-			writer.AddLine("public virtual void Delete() {");
+			writer.AddFormatLine("{0} virtual void Delete() {{", Config.DataAccessMethodsAccessModifier);
 			writer.pushIndent();
 			writer.AddFormatLine("using ({0}{1} db = new {0}{1}()) {{", table.Parent.Namespace, Config.DataModelNamePostfix);
 			writer.pushIndent();
@@ -250,7 +250,7 @@ namespace Sogen.Generator {
 			// Static Delete
 			writer.AddLine();
 			writer.AddXmlComment(string.Format("Delete a {0} from db", table.ClassName));
-			writer.AddLine("public static void Delete (").pushIndent();
+			writer.AddFormatLine("{0} static void Delete (", Config.DataAccessMethodsAccessModifier).pushIndent();
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns, "{type} {camelprop}", ", \r\n", false, false)).AddLine(" ) {");
 			writer.AddFormatLine("var {0} = new {1}();", table.ClassName.ToCamel(), table.ClassName);
 			writer.Add(Helper.GetColumnList(table.PrimaryKey.Columns,
@@ -293,7 +293,7 @@ namespace Sogen.Generator {
 									.Replace("{schema}", column.Parent.Parent.Namespace)
 									.Replace("{table}", column.Parent.ClassName)
 									.Replace("{name}", column.PropertyName)
-									.Replace("{type}", (column.IsEnum)? column.EnumType:column.Type.CSharpType)
+									.Replace("{type}", (column.IsEnum) ? column.EnumType : column.Type.CSharpType)
 									.Replace("{type?}", column.GetType));
 			}
 
@@ -626,7 +626,7 @@ namespace Sogen.Generator {
 			writer.AddComment(string.Format("Date Created: {0}", DateTime.Now));
 			writer.AddComment("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
 			writer.AddComment(" This code was generated for BLToolkit");
-			writer.AddComment(" warnning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.");
+			writer.AddComment(" warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.");
 			writer.AddComment("----------------------------------------------------------------------------------------------------------");
 			return writer.Text;
 		}

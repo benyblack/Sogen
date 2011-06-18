@@ -23,6 +23,8 @@ namespace Sogen.Generator.Configuration {
 		public string DataModelNamePostfix { get; set; }
 		[XmlElement("dataModelAccessModifier")]
 		public string DataModelAccessModifier { get; set; }
+		[XmlElement("dataAccessMethodsAccessModifier")]
+		public string DataAccessMethodsAccessModifier { get; set; }
 		[XmlIgnore()]
 		private string _exportPath;
 		[XmlElement("exportPath")]
@@ -54,6 +56,7 @@ namespace Sogen.Generator.Configuration {
 			this.RootNamespace = "Sogen.DB";
 			this.DataModelNamePostfix = "DataModel";
 			this.DataModelAccessModifier = "public";
+			this.DataAccessMethodsAccessModifier = "public";
 			this.ExportPath = "C:\\SogenGenerated\\";
 			this.GenerateEmptyPartialClass =
 				this.CheckObjectsValidation = true;

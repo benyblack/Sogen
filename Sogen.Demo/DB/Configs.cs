@@ -3,7 +3,7 @@
 // Date Created: 2010-09-17 7:12:13 PM
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 //  This code was generated for BLToolkit
-//  warnning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
+//  warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
 // ----------------------------------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
