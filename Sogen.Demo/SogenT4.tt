@@ -35,14 +35,15 @@
 	bc.CheckObjectsValidation = false; //
 	bc.CustomUsings = new String[]{}; //
 	bc.DataModelAccessModifier = "public"; // 
+	bc.DataAccessMethodsAccessModifier = "internal" //
 	bc.DataModelNamePostfix = "Entities"; // 
 	bc.GenerateEmptyPartialClass = false; 
 	bc.Language =  Sogen.Writer.WriterEnums.Languages.CSharp; 
 	MSSqlConfiguration msconf = new MSSqlConfiguration();
-	msconf.Database = "Avval"; //
+	msconf.Database = "SogenDemoDB"; //
 	msconf.GenerateObjectForViews = false; //
 	msconf.Password = "123"; //
-	msconf.Schemas = new String[]{"Avval"}; //
+	msconf.Schemas = new String[]{"Common", "Contacts", "Messages"}; //
 	msconf.Server = @".\sql2k8"; //
 	msconf.Username = "sa"; //
 	msconf.WindowsAuthentication = false; //
