@@ -1,6 +1,6 @@
 ﻿// ----------------------------------------------------------------------------------------------------------
-// Sogen - Code Generator for BLToolkit version 1.4.3.0
-// Date Created: 2010-09-17 7:12:13 PM
+// Sogen - Code Generator for BLToolkit version 1.4.4.0
+// Date Created: 2011-10-12 5:03:52 PM
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 //  This code was generated for BLToolkit
 //  warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
@@ -163,7 +163,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -180,7 +180,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					db.SetCommand(@"
 						Update [Messages].[Message]  set 
@@ -200,7 +200,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					db.SetCommand(@"
 						Delete [Messages].[Message] 
@@ -213,7 +213,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Delete a Message from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var message = new Message();
 				message.ID = id;
@@ -229,7 +229,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Get a Message from db
 			/// </summary>
-			public static Message GetByID (
+			internal static Message GetByID (
 				long id ) {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					var query =
@@ -237,7 +237,12 @@ namespace Sogen.Demo.DB.Messages {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Message>();
+					try {
+						return query.Single<Message>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 		} // Message
@@ -305,7 +310,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -322,7 +327,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					db.SetCommand(@"
 						Update [Messages].[Type]  set 
@@ -337,7 +342,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					db.SetCommand(@"
 						Delete [Messages].[Type] 
@@ -350,7 +355,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Delete a Type from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var type = new Type();
 				type.ID = id;
@@ -366,7 +371,7 @@ namespace Sogen.Demo.DB.Messages {
 			/// <summary>
 			/// Get a Type from db
 			/// </summary>
-			public static Type GetByID (
+			internal static Type GetByID (
 				long id ) {
 				using (MessagesDataModel db = new MessagesDataModel()) {
 					var query =
@@ -374,7 +379,12 @@ namespace Sogen.Demo.DB.Messages {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Type>();
+					try {
+						return query.Single<Type>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 		} // Type

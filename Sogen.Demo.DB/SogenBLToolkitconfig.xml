@@ -3,6 +3,7 @@
   <rootNamespace>Sogen.Demo.DB</rootNamespace>
   <dataModelNamePostfix>DataModel</dataModelNamePostfix>
   <dataModelAccessModifier>public</dataModelAccessModifier>
+  <dataAccessMethodsAccessModifier>internal</dataAccessMethodsAccessModifier>    
   <exportPath>C:\SogenGenerated\</exportPath>
   <generateEmptyPartialClass>true</generateEmptyPartialClass>
   <checkObjectsValidation>true</checkObjectsValidation>
@@ -12,7 +13,7 @@
   <provider>MSSqlServer</provider>
   <language>CSharp</language>
   <MSSqlConfig>
-    <server>.\sql2k8</server>
+    <server>.\sql2k8R2</server>
     <database>SogenDemoDB</database>
     <username>user</username>
     <password>pass</password>

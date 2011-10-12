@@ -1,6 +1,6 @@
 ﻿// ----------------------------------------------------------------------------------------------------------
-// Sogen - Code Generator for BLToolkit version 1.4.3.0
-// Date Created: 2010-09-17 7:12:13 PM
+// Sogen - Code Generator for BLToolkit version 1.4.4.0
+// Date Created: 2011-10-12 5:03:52 PM
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 //  This code was generated for BLToolkit
 //  warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
@@ -269,7 +269,7 @@ namespace Sogen.Demo.DB.Members {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (MembersDataModel db = new MembersDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -286,7 +286,7 @@ namespace Sogen.Demo.DB.Members {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (MembersDataModel db = new MembersDataModel()) {
 					db.SetCommand(@"
 						Update [Members].[Member]  set 
@@ -309,7 +309,7 @@ namespace Sogen.Demo.DB.Members {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (MembersDataModel db = new MembersDataModel()) {
 					db.SetCommand(@"
 						Delete [Members].[Member] 
@@ -322,7 +322,7 @@ namespace Sogen.Demo.DB.Members {
 			/// <summary>
 			/// Delete a Member from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var member = new Member();
 				member.ID = id;
@@ -338,7 +338,7 @@ namespace Sogen.Demo.DB.Members {
 			/// <summary>
 			/// Get a Member from db
 			/// </summary>
-			public static Member GetByID (
+			internal static Member GetByID (
 				long id ) {
 				using (MembersDataModel db = new MembersDataModel()) {
 					var query =
@@ -346,14 +346,19 @@ namespace Sogen.Demo.DB.Members {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Member>();
+					try {
+						return query.Single<Member>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 			
 			/// <summary>
 			/// Get a Member from db
 			/// </summary>
-			public static Member GetByOfficeAndPesonnelCode (
+			internal static Member GetByOfficeAndPesonnelCode (
 				MembersEnums.Office office, 
 				string pesonnelCode ) {
 				using (MembersDataModel db = new MembersDataModel()) {
@@ -362,14 +367,19 @@ namespace Sogen.Demo.DB.Members {
 						where
 							q.Office == office && q.PesonnelCode == pesonnelCode
 						select q;
-					return query.Single<Member>();
+					try {
+						return query.Single<Member>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByOfficeAndPesonnelCode
 			
 			/// <summary>
 			/// Get a Member from db
 			/// </summary>
-			public static Member GetByUsername (
+			internal static Member GetByUsername (
 				string username ) {
 				using (MembersDataModel db = new MembersDataModel()) {
 					var query =
@@ -377,7 +387,12 @@ namespace Sogen.Demo.DB.Members {
 						where
 							q.Username == username
 						select q;
-					return query.Single<Member>();
+					try {
+						return query.Single<Member>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByUsername
 		} // Member
@@ -386,13 +401,13 @@ namespace Sogen.Demo.DB.Members {
 	#region MembersEnums
 		public partial class MembersEnums {
 			public enum Gender {
-				[MapValue(0)] Unknown,
-				[MapValue(1)] Male,
-				[MapValue(2)] Female,
+				[MapValue(0)] Unknown = 0,
+				[MapValue(1)] Male = 1,
+				[MapValue(2)] Female = 2,
 			}
 			public enum Office {
-				[MapValue(1)] Center,
-				[MapValue(2)] SecondOffice,
+				[MapValue(1)] Center = 1,
+				[MapValue(2)] SecondOffice = 2,
 			}
 		} // MembersEnums
 	#endregion MembersEnums

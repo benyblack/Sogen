@@ -1,6 +1,6 @@
 ﻿// ----------------------------------------------------------------------------------------------------------
-// Sogen - Code Generator for BLToolkit version 1.4.3.0
-// Date Created: 2010-09-17 7:12:13 PM
+// Sogen - Code Generator for BLToolkit version 1.4.4.0
+// Date Created: 2011-10-12 5:03:52 PM
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 //  This code was generated for BLToolkit
 //  warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
@@ -122,7 +122,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -139,7 +139,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					db.SetCommand(@"
 						Update [Contacts].[Address]  set 
@@ -156,7 +156,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					db.SetCommand(@"
 						Delete [Contacts].[Address] 
@@ -169,7 +169,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Delete a Address from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var address = new Address();
 				address.ID = id;
@@ -185,7 +185,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Get a Address from db
 			/// </summary>
-			public static Address GetByID (
+			internal static Address GetByID (
 				long id ) {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					var query =
@@ -193,7 +193,12 @@ namespace Sogen.Demo.DB.Contacts {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Address>();
+					try {
+						return query.Single<Address>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 		} // Address
@@ -264,7 +269,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -281,7 +286,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					db.SetCommand(@"
 						Update [Contacts].[Email]  set 
@@ -297,7 +302,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					db.SetCommand(@"
 						Delete [Contacts].[Email] 
@@ -310,7 +315,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Delete a Email from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var email = new Email();
 				email.ID = id;
@@ -326,7 +331,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Get a Email from db
 			/// </summary>
-			public static Email GetByID (
+			internal static Email GetByID (
 				long id ) {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					var query =
@@ -334,14 +339,19 @@ namespace Sogen.Demo.DB.Contacts {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Email>();
+					try {
+						return query.Single<Email>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 			
 			/// <summary>
 			/// Get a Email from db
 			/// </summary>
-			public static Email GetByEmailAddress (
+			internal static Email GetByEmailAddress (
 				string emailAddress ) {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					var query =
@@ -349,7 +359,12 @@ namespace Sogen.Demo.DB.Contacts {
 						where
 							q.EmailAddress == emailAddress
 						select q;
-					return query.Single<Email>();
+					try {
+						return query.Single<Email>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByEmailAddress
 		} // Email
@@ -420,7 +435,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -437,7 +452,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					db.SetCommand(@"
 						Update [Contacts].[Messenger]  set 
@@ -453,7 +468,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					db.SetCommand(@"
 						Delete [Contacts].[Messenger] 
@@ -466,7 +481,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Delete a Messenger from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var messenger = new Messenger();
 				messenger.ID = id;
@@ -482,7 +497,7 @@ namespace Sogen.Demo.DB.Contacts {
 			/// <summary>
 			/// Get a Messenger from db
 			/// </summary>
-			public static Messenger GetByID (
+			internal static Messenger GetByID (
 				long id ) {
 				using (ContactsDataModel db = new ContactsDataModel()) {
 					var query =
@@ -490,14 +505,19 @@ namespace Sogen.Demo.DB.Contacts {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Messenger>();
+					try {
+						return query.Single<Messenger>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 			
 			/// <summary>
 			/// Get a Messenger from db
 			/// </summary>
-			public static Messenger GetByMemberIDAndService (
+			internal static Messenger GetByMemberIDAndService (
 				long memberID, 
 				ContactsEnums.MessengerService service ) {
 				using (ContactsDataModel db = new ContactsDataModel()) {
@@ -506,14 +526,19 @@ namespace Sogen.Demo.DB.Contacts {
 						where
 							q.MemberID == memberID && q.Service == service
 						select q;
-					return query.Single<Messenger>();
+					try {
+						return query.Single<Messenger>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByMemberIDAndService
 			
 			/// <summary>
 			/// Get a Messenger from db
 			/// </summary>
-			public static Messenger GetByUsernameAndService (
+			internal static Messenger GetByUsernameAndService (
 				string username, 
 				ContactsEnums.MessengerService service ) {
 				using (ContactsDataModel db = new ContactsDataModel()) {
@@ -522,7 +547,12 @@ namespace Sogen.Demo.DB.Contacts {
 						where
 							q.Username == username && q.Service == service
 						select q;
-					return query.Single<Messenger>();
+					try {
+						return query.Single<Messenger>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByUsernameAndService
 		} // Messenger
@@ -531,10 +561,10 @@ namespace Sogen.Demo.DB.Contacts {
 	#region ContactsEnums
 		public partial class ContactsEnums {
 			public enum MessengerService {
-				[MapValue(1)] GTalk,
-				[MapValue(2)] Yahoo,
-				[MapValue(3)] MSN,
-				[MapValue(4)] ICQ,
+				[MapValue(1)] GTalk = 1,
+				[MapValue(2)] Yahoo = 2,
+				[MapValue(3)] MSN = 3,
+				[MapValue(4)] ICQ = 4,
 			}
 		} // ContactsEnums
 	#endregion ContactsEnums

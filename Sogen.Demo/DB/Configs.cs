@@ -1,6 +1,6 @@
 ﻿// ----------------------------------------------------------------------------------------------------------
-// Sogen - Code Generator for BLToolkit version 1.4.3.0
-// Date Created: 2010-09-17 7:12:13 PM
+// Sogen - Code Generator for BLToolkit version 1.4.4.0
+// Date Created: 2011-10-12 5:03:52 PM
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 //  This code was generated for BLToolkit
 //  warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.

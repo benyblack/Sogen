@@ -1,6 +1,6 @@
 ﻿// ----------------------------------------------------------------------------------------------------------
-// Sogen - Code Generator for BLToolkit version 1.4.3.0
-// Date Created: 2010-09-17 7:12:13 PM
+// Sogen - Code Generator for BLToolkit version 1.4.4.0
+// Date Created: 2011-10-12 5:03:52 PM
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 //  This code was generated for BLToolkit
 //  warning!! Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
@@ -109,7 +109,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -126,7 +126,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					db.SetCommand(@"
 						Update [Common].[City]  set 
@@ -141,7 +141,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					db.SetCommand(@"
 						Delete [Common].[City] 
@@ -154,7 +154,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Delete a City from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var city = new City();
 				city.ID = id;
@@ -170,7 +170,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Get a City from db
 			/// </summary>
-			public static City GetByID (
+			internal static City GetByID (
 				long id ) {
 				using (CommonDataModel db = new CommonDataModel()) {
 					var query =
@@ -178,7 +178,12 @@ namespace Sogen.Demo.DB.Common {
 						where
 							q.ID == id
 						select q;
-					return query.Single<City>();
+					try {
+						return query.Single<City>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 		} // City
@@ -256,7 +261,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -273,7 +278,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					db.SetCommand(@"
 						Update [Common].[Country]  set 
@@ -289,7 +294,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					db.SetCommand(@"
 						Delete [Common].[Country] 
@@ -302,7 +307,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Delete a Country from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var country = new Country();
 				country.ID = id;
@@ -318,7 +323,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Get a Country from db
 			/// </summary>
-			public static Country GetByID (
+			internal static Country GetByID (
 				long id ) {
 				using (CommonDataModel db = new CommonDataModel()) {
 					var query =
@@ -326,14 +331,19 @@ namespace Sogen.Demo.DB.Common {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Country>();
+					try {
+						return query.Single<Country>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 			
 			/// <summary>
 			/// Get a Country from db
 			/// </summary>
-			public static Country GetByISOCode (
+			internal static Country GetByISOCode (
 				string iSOCode ) {
 				using (CommonDataModel db = new CommonDataModel()) {
 					var query =
@@ -341,7 +351,12 @@ namespace Sogen.Demo.DB.Common {
 						where
 							q.ISOCode == iSOCode
 						select q;
-					return query.Single<Country>();
+					try {
+						return query.Single<Country>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByISOCode
 		} // Country
@@ -409,7 +424,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Insert this instance to db
 			/// </summary>
-			public virtual void Insert() {
+			internal virtual void Insert() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					this._id = 
 						db.SetCommand(@"
@@ -426,7 +441,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Update this instance in db
 			/// </summary>
-			public virtual void Update() {
+			internal virtual void Update() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					db.SetCommand(@"
 						Update [Common].[Industry]  set 
@@ -441,7 +456,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Delete this instance from db
 			/// </summary>
-			public virtual void Delete() {
+			internal virtual void Delete() {
 				using (CommonDataModel db = new CommonDataModel()) {
 					db.SetCommand(@"
 						Delete [Common].[Industry] 
@@ -454,7 +469,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Delete a Industry from db
 			/// </summary>
-			public static void Delete (
+			internal static void Delete (
 				long id ) {
 				var industry = new Industry();
 				industry.ID = id;
@@ -470,7 +485,7 @@ namespace Sogen.Demo.DB.Common {
 			/// <summary>
 			/// Get a Industry from db
 			/// </summary>
-			public static Industry GetByID (
+			internal static Industry GetByID (
 				long id ) {
 				using (CommonDataModel db = new CommonDataModel()) {
 					var query =
@@ -478,7 +493,12 @@ namespace Sogen.Demo.DB.Common {
 						where
 							q.ID == id
 						select q;
-					return query.Single<Industry>();
+					try {
+						return query.Single<Industry>();
+					}
+					catch (Exception) {
+						return null;
+					}
 				}
 			} // GetByID
 		} // Industry
