@@ -385,7 +385,7 @@ namespace Sogen.Generator {
 			foreach (Data.MetaData.Enum e in enums.Values) {
 				writer.AddFormatLine("public enum {0} {{", e.Name).pushIndent();
 				foreach (KeyValuePair<string, string> item in e.Values.Values) {
-					writer.AddFormatLine("[MapValue({0})] {1},", item.Key, item.Value);
+					writer.AddFormatLine("[MapValue({0})] {1} = {0},", item.Key, item.Value);
 				}
 				writer.popIndent().AddLine("}");
 			}
